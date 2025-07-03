@@ -39,9 +39,7 @@
 
         .custom-cursor {
             width: 8px;
-            /* Changed from 20px */
             height: 8px;
-            /* Changed from 20px */
             border-radius: 50%;
             background: radial-gradient(circle, #ff69b4, #ff1493);
             position: fixed;
@@ -185,6 +183,8 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
+            /* Indicate it's clickable */
         }
 
         .cat-frame::before {
@@ -253,8 +253,22 @@
             animation: pulse 2s ease-in-out infinite;
         }
 
-        @keyframes pulse {
+        /* New style for the surprise text */
+        #surprise-text {
+            color: #ff69b4;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-top: 2rem; /* Space from buttons above */
+            z-index: 10;
+            position: relative;
+            text-shadow: 0 0 8px rgba(255, 105, 180, 0.3);
+            animation: pulse 2.5s ease-in-out infinite; /* Slightly different pulse speed */
+            font-weight: bold; /* Make it stand out a bit */
+            padding: 0 1rem; /* Prevent text from hitting edges on small screens */
+        }
 
+
+        @keyframes pulse {
             0%,
             100% {
                 transform: scale(1);
@@ -366,7 +380,6 @@
         }
 
         @keyframes sparkle {
-
             0%,
             100% {
                 opacity: 0;
@@ -414,6 +427,7 @@
             }
         }
 
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .title {
@@ -429,6 +443,11 @@
             .subtitle {
                 font-size: 1.2rem;
                 padding: 0 1rem;
+            }
+
+            #surprise-text {
+                font-size: 1rem;
+                margin-top: 1.5rem;
             }
 
             .features {
@@ -465,6 +484,11 @@
                 font-size: 1.1rem;
             }
 
+            #surprise-text {
+                font-size: 0.9rem;
+                margin-top: 1rem;
+            }
+
             .feature {
                 width: 95%;
                 padding: 1.2rem;
@@ -493,6 +517,10 @@
                 font-size: 1.8rem;
             }
 
+            #surprise-text {
+                font-size: 1.4rem;
+            }
+
             .features {
                 gap: 2.5rem;
             }
@@ -508,6 +536,11 @@
 <body>
     <div class="custom-cursor"></div>
 
+    <audio id="background-music" loop>
+        <source src="kohaze_theme.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
     <div class="container">
         <div class="floating-particles" id="particles"></div>
         <div class="floating-icons" id="floatingIcons"></div>
@@ -517,7 +550,7 @@
 
         <div class="cat-container">
             <div class="cat-frame">
-                <img src="kohaze.png" alt="Kohaze the adorable cat" class="cat-image">
+                <img src="kohaze.png" alt="Kohaze the adorable cat" class="cat-image" id="kohaze-picture">
             </div>
         </div>
 
@@ -537,6 +570,9 @@
                 <p>Follow @intelarcy</p>
             </a>
         </div>
+
+        <p id="surprise-text">Click Kohaze for a surprise :3 </p>
+
     </div>
 
     <script>
@@ -577,7 +613,7 @@
         // Create floating icons
         function createFloatingIcons() {
             const iconsContainer = document.getElementById('floatingIcons');
-            const icons = ['🐱', '🌟', '✨', '💫', '🎀', '🌸', '💕', '🦄', '🌈', '⭐', '💖', '💗', '💘', '💞', '💓', '💝', '💜', '💛',];
+            const icons = ['🐱', '🌟', '✨', '💫', '🎀', '🌸', '💕', '🦄', '🌈', '⭐', '💖', '💗', '💘', '💞', '💓', '💝', '💜', '💛', ];
 
             for (let i = 0; i < 30; i++) {
                 const icon = document.createElement('div');
@@ -674,6 +710,24 @@
             feature.addEventListener('mouseleave', () => {
                 cursor.style.transform = 'scale(1)';
             });
+        });
+
+        // --- Music Player Control (On Kohaze Picture Click) ---
+        const backgroundMusic = document.getElementById('background-music');
+        const kohazePicture = document.getElementById('kohaze-picture');
+
+        kohazePicture.addEventListener('click', () => {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play().then(() => {
+                    console.log("Music playing!");
+                }).catch(error => {
+                    console.warn("Music playback prevented:", error);
+                    alert("Music could not be played. Please allow media autoplay in your browser settings if you wish for background music.");
+                });
+            } else {
+                backgroundMusic.pause();
+                console.log("Music paused!");
+            }
         });
     </script>
 </body>
