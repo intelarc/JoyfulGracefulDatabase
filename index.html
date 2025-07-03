@@ -294,10 +294,10 @@
         }
 
         .features {
-            display: flex;
+            display: grid; /* Changed to grid for even sizing */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive columns */
             gap: 2rem;
             margin-top: 2rem;
-            flex-wrap: wrap;
             justify-content: center;
             z-index: 10;
             position: relative;
@@ -312,15 +312,19 @@
             padding: 2rem;
             color: #e0b0ff; /* Light purple for text */
             text-align: center;
-            min-width: 200px;
+            /* Removed min-width to let grid handle sizing */
             border: 2px solid rgba(160, 32, 240, 0.5); /* Dark purple border */
             transition: all 0.3s ease;
             text-decoration: none;
-            display: block;
+            display: flex; /* Use flex for content alignment inside feature */
+            flex-direction: column;
+            justify-content: center; /* Center content vertically */
+            align-items: center; /* Center content horizontally */
             cursor: pointer;
             touch-action: manipulation;
             position: relative;
             overflow: hidden;
+            height: 150px; /* Added fixed height for uniform buttons */
         }
 
         .feature::before {
@@ -389,7 +393,7 @@
             position: absolute;
             width: 4px;
             height: 4px;
-            background: #ffd700; /* Gold sparkles */
+            background: #a020f0; /* Changed to purple */
             border-radius: 50%;
             animation: sparkle 2s infinite;
         }
@@ -469,17 +473,17 @@
             }
 
             .features {
-                flex-direction: column;
-                align-items: center;
+                grid-template-columns: 1fr; /* Stack items on small screens */
                 gap: 1rem;
                 margin-top: 1.5rem;
             }
 
             .feature {
-                width: 90%;
-                max-width: 300px;
+                width: 90%; /* Adjusted for mobile */
+                max-width: 300px; /* Adjusted for mobile */
                 min-width: unset;
                 padding: 1.5rem;
+                height: 120px; /* Adjusted height for mobile */
             }
 
             .container {
@@ -512,6 +516,7 @@
             .feature {
                 width: 95%;
                 padding: 1.2rem;
+                height: 100px; /* Further adjusted height for smaller mobile */
             }
 
             .feature h3 {
@@ -549,6 +554,7 @@
             .feature {
                 min-width: 220px;
                 padding: 2.5rem;
+                height: 180px; /* Adjusted height for larger screens */
             }
         }
     </style>
@@ -594,7 +600,7 @@
             </a>
             <a href="computer_specs.html" class="feature">
                 <h3>💻 My PC Specs</h3>
-                <p>Check out my computer</p>
+                <p>Check out my computer's details</p>
             </a>
         </div>
 
@@ -603,192 +609,195 @@
     </div>
 
     <script>
-        // Custom cursor
-        const cursor = document.querySelector('.custom-cursor');
+        // Ensure the script runs after the DOM is fully loaded
+        window.onload = function() {
+            // Custom cursor
+            const cursor = document.querySelector('.custom-cursor');
 
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
 
-        // Create floating particles
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 60;
+            // Create floating particles
+            function createParticles() {
+                const particlesContainer = document.getElementById('particles');
+                const particleCount = 60;
 
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 15 + 's';
-                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-                particlesContainer.appendChild(particle);
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.animationDelay = Math.random() * 15 + 's';
+                    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                    particlesContainer.appendChild(particle);
+                }
+
+                // Add heart particles
+                for (let i = 0; i < 20; i++) {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart-particle';
+                    heart.innerHTML = '�';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDelay = Math.random() * 12 + 's';
+                    heart.style.animationDuration = (Math.random() * 8 + 12) + 's';
+                    particlesContainer.appendChild(heart);
+                }
             }
 
-            // Add heart particles
-            for (let i = 0; i < 20; i++) {
-                const heart = document.createElement('div');
-                heart.className = 'heart-particle';
-                heart.innerHTML = '💖';
-                heart.style.left = Math.random() * 100 + '%';
-                heart.style.animationDelay = Math.random() * 12 + 's';
-                heart.style.animationDuration = (Math.random() * 8 + 12) + 's';
-                particlesContainer.appendChild(heart);
+            // Create floating icons
+            function createFloatingIcons() {
+                const iconsContainer = document.getElementById('floatingIcons');
+                const icons = ['🐱', '🌟', '✨', '💫', '🎀', '🌸', '💕', '🦄', '🌈', '⭐', '💖', '💗', '💘', '💞', '💓', '💝', '💜', '💛', ];
+
+                for (let i = 0; i < 30; i++) {
+                    const icon = document.createElement('div');
+                    icon.className = 'floating-icon';
+                    icon.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+                    icon.style.left = Math.random() * 100 + '%';
+                    icon.style.animationDelay = Math.random() * 15 + 's';
+                    icon.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                    iconsContainer.appendChild(icon);
+                }
             }
-        }
 
-        // Create floating icons
-        function createFloatingIcons() {
-            const iconsContainer = document.getElementById('floatingIcons');
-            const icons = ['🐱', '🌟', '✨', '💫', '🎀', '🌸', '💕', '🦄', '🌈', '⭐', '💖', '💗', '💘', '💞', '💓', '💝', '💜', '💛', ];
+            // Create floating paw prints
+            function createPawPrints() {
+                const pawContainer = document.getElementById('pawPrints');
+                const pawCount = 25;
 
-            for (let i = 0; i < 30; i++) {
-                const icon = document.createElement('div');
-                icon.className = 'floating-icon';
-                icon.innerHTML = icons[Math.floor(Math.random() * icons.length)];
-                icon.style.left = Math.random() * 100 + '%';
-                icon.style.animationDelay = Math.random() * 15 + 's';
-                icon.style.animationDuration = (Math.random() * 10 + 15) + 's';
-                iconsContainer.appendChild(icon);
+                for (let i = 0; i < pawCount; i++) {
+                    const paw = document.createElement('div');
+                    paw.className = 'paw';
+                    paw.innerHTML = '🐾';
+                    paw.style.left = Math.random() * 100 + '%';
+                    paw.style.animationDelay = Math.random() * 20 + 's';
+                    paw.style.animationDuration = (Math.random() * 15 + 15) + 's';
+                    pawContainer.appendChild(paw);
+                }
             }
-        }
 
-        // Create floating paw prints
-        function createPawPrints() {
-            const pawContainer = document.getElementById('pawPrints');
-            const pawCount = 25;
+            // Enhanced mouse trail effect
+            document.addEventListener('mousemove', (e) => {
+                const trail = document.createElement('div');
+                trail.style.position = 'fixed';
+                trail.style.left = e.clientX + 'px';
+                trail.style.top = e.clientY + 'px';
+                trail.style.width = '8px';
+                trail.style.height = '8px';
+                trail.style.background = 'radial-gradient(circle, #ff69b4, #ff1493)';
+                trail.style.borderRadius = '50%';
+                trail.style.pointerEvents = 'none';
+                trail.style.zIndex = '1000';
+                trail.style.animation = 'fadeOut 1.5s ease-out forwards';
+                trail.style.boxShadow = '0 0 10px rgba(255, 105, 180, 0.6)';
 
-            for (let i = 0; i < pawCount; i++) {
-                const paw = document.createElement('div');
-                paw.className = 'paw';
-                paw.innerHTML = '🐾';
-                paw.style.left = Math.random() * 100 + '%';
-                paw.style.animationDelay = Math.random() * 20 + 's';
-                paw.style.animationDuration = (Math.random() * 15 + 15) + 's';
-                pawContainer.appendChild(paw);
-            }
-        }
-
-        // Enhanced mouse trail effect
-        document.addEventListener('mousemove', (e) => {
-            const trail = document.createElement('div');
-            trail.style.position = 'fixed';
-            trail.style.left = e.clientX + 'px';
-            trail.style.top = e.clientY + 'px';
-            trail.style.width = '8px';
-            trail.style.height = '8px';
-            trail.style.background = 'radial-gradient(circle, #ff69b4, #ff1493)';
-            trail.style.borderRadius = '50%';
-            trail.style.pointerEvents = 'none';
-            trail.style.zIndex = '1000';
-            trail.style.animation = 'fadeOut 1.5s ease-out forwards';
-            trail.style.boxShadow = '0 0 10px rgba(255, 105, 180, 0.6)';
-
-            document.body.appendChild(trail);
-
-            setTimeout(() => {
-                trail.remove();
-            }, 1500);
-        });
-
-        // Create sparkles on click
-        document.addEventListener('click', (e) => {
-            for (let i = 0; i < 8; i++) {
-                const sparkle = document.createElement('div');
-                sparkle.className = 'sparkle';
-                sparkle.style.left = (e.clientX + Math.random() * 60 - 30) + 'px';
-                sparkle.style.top = (e.clientY + Math.random() * 60 - 30) + 'px';
-                sparkle.style.animationDelay = Math.random() * 0.5 + 's';
-                document.body.appendChild(sparkle);
+                document.body.appendChild(trail);
 
                 setTimeout(() => {
-                    sparkle.remove();
-                }, 2000);
-            }
-        });
-
-        // Add fadeOut animation for mouse trail
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fadeOut {
-                0% {
-                    opacity: 1;
-                    transform: scale(1);
-                }
-                100% {
-                    opacity: 0;
-                    transform: scale(0);
-                }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Initialize effects
-        createParticles();
-        createFloatingIcons();
-        createPawPrints();
-
-        // Add hover effect for features
-        document.querySelectorAll('.feature').forEach(feature => {
-            feature.addEventListener('mouseenter', () => {
-                cursor.style.transform = 'scale(1.5)';
+                    trail.remove();
+                }, 1500);
             });
 
-            feature.addEventListener('mouseleave', () => {
-                cursor.style.transform = 'scale(1)';
+            // Create sparkles on click
+            document.addEventListener('click', (e) => {
+                for (let i = 0; i < 8; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = (e.clientX + Math.random() * 60 - 30) + 'px';
+                    sparkle.style.top = (e.clientY + Math.random() * 60 - 30) + 'px';
+                    sparkle.style.animationDelay = Math.random() * 0.5 + 's';
+                    document.body.appendChild(sparkle);
+
+                    setTimeout(() => {
+                        sparkle.remove();
+                    }, 2000);
+                }
             });
-        });
 
-        // --- Music Player Control (On Kohaze Picture Click) ---
-        const backgroundMusic = document.getElementById('background-music');
-        const kohazePicture = document.getElementById('kohaze-picture');
-        const uniMeowMessage = document.getElementById('uni-meow-message'); // Get the new message element
+            // Add fadeOut animation for mouse trail
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeOut {
+                    0% {
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+                    100% {
+                        opacity: 0;
+                        transform: scale(0);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
 
-        kohazePicture.addEventListener('click', () => {
-            if (backgroundMusic.paused) {
-                backgroundMusic.play().then(() => {
-                    console.log("Music playing!");
-                    uniMeowMessage.style.opacity = '1'; // Show the message
-                }).catch(error => {
-                    console.warn("Music playback prevented:", error);
-                    // Using a custom message box instead of alert()
-                    const messageBox = document.createElement('div');
-                    messageBox.style.cssText = `
-                        position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        background: rgba(0, 0, 0, 0.8);
-                        color: #fff;
-                        padding: 20px;
-                        border-radius: 10px;
-                        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-                        z-index: 10000;
-                        text-align: center;
-                        font-family: 'Inter', sans-serif;
-                    `;
-                    messageBox.innerHTML = `
-                        <p>Music could not be played. Please allow media autoplay in your browser settings if you wish for background music.</p>
-                        <button onclick="this.parentNode.remove()" style="
-                            margin-top: 15px;
-                            padding: 10px 20px;
-                            background: linear-gradient(45deg, #a020f0, #8a2be2);
-                            color: #fff;
-                            border: none;
-                            border-radius: 20px;
-                            cursor: pointer;
-                            font-weight: bold;
-                            transition: all 0.3s ease;
-                        ">OK</button>
-                    `;
-                    document.body.appendChild(messageBox);
+            // Initialize effects
+            createParticles();
+            createFloatingIcons();
+            createPawPrints();
+
+            // Add hover effect for features
+            document.querySelectorAll('.feature').forEach(feature => {
+                feature.addEventListener('mouseenter', () => {
+                    cursor.style.transform = 'scale(1.5)';
                 });
-            } else {
-                backgroundMusic.pause();
-                console.log("Music paused!");
-                uniMeowMessage.style.opacity = '0'; // Hide the message
-            }
-        });
+
+                feature.addEventListener('mouseleave', () => {
+                    cursor.style.transform = 'scale(1)';
+                });
+            });
+
+            // --- Music Player Control (On Kohaze Picture Click) ---
+            const backgroundMusic = document.getElementById('background-music');
+            const kohazePicture = document.getElementById('kohaze-picture');
+            const uniMeowMessage = document.getElementById('uni-meow-message'); // Get the new message element
+
+            kohazePicture.addEventListener('click', () => {
+                if (backgroundMusic.paused) {
+                    backgroundMusic.play().then(() => {
+                        console.log("Music playing!");
+                        uniMeowMessage.style.opacity = '1'; // Show the message
+                    }).catch(error => {
+                        console.warn("Music playback prevented:", error);
+                        // Using a custom message box instead of alert()
+                        const messageBox = document.createElement('div');
+                        messageBox.style.cssText = `
+                            position: fixed;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            background: rgba(0, 0, 0, 0.8);
+                            color: #fff;
+                            padding: 20px;
+                            border-radius: 10px;
+                            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+                            z-index: 10000;
+                            text-align: center;
+                            font-family: 'Inter', sans-serif;
+                        `;
+                        messageBox.innerHTML = `
+                            <p>Music could not be played. Please allow media autoplay in your browser settings if you wish for background music.</p>
+                            <button onclick="this.parentNode.remove()" style="
+                                margin-top: 15px;
+                                padding: 10px 20px;
+                                background: linear-gradient(45deg, #a020f0, #8a2be2);
+                                color: #fff;
+                                border: none;
+                                border-radius: 20px;
+                                cursor: pointer;
+                                font-weight: bold;
+                                transition: all 0.3s ease;
+                            ">OK</button>
+                        `;
+                        document.body.appendChild(messageBox);
+                    });
+                } else {
+                    backgroundMusic.pause();
+                    console.log("Music paused!");
+                    uniMeowMessage.style.opacity = '0'; // Hide the message
+                }
+            });
+        }; // End of window.onload
     </script>
 </body>
 
