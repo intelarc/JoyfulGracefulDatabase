@@ -253,20 +253,34 @@
             animation: pulse 2s ease-in-out infinite;
         }
 
-        /* New style for the surprise text */
+        /* Styles for the "Uni Meowing" message */
+        #uni-meow-message {
+            color: #dda0dd; /* A slightly different pink/purple */
+            font-size: 1.1rem;
+            text-align: center;
+            margin-top: -1.5rem; /* Pull it slightly closer to the subtitle */
+            margin-bottom: 1.5rem; /* Give space before features */
+            z-index: 10;
+            position: relative;
+            text-shadow: 0 0 8px rgba(255, 165, 0, 0.5); /* A subtle orange-ish glow */
+            font-weight: bold;
+            opacity: 0; /* Start hidden */
+            transition: opacity 0.5s ease-in-out; /* Smooth fade effect */
+        }
+
+        /* New style for the surprise text (from previous request) */
         #surprise-text {
             color: #ff69b4;
             font-size: 1.2rem;
             text-align: center;
-            margin-top: 2rem; /* Space from buttons above */
+            margin-top: 2rem;
             z-index: 10;
             position: relative;
             text-shadow: 0 0 8px rgba(255, 105, 180, 0.3);
-            animation: pulse 2.5s ease-in-out infinite; /* Slightly different pulse speed */
-            font-weight: bold; /* Make it stand out a bit */
-            padding: 0 1rem; /* Prevent text from hitting edges on small screens */
+            animation: pulse 2.5s ease-in-out infinite;
+            font-weight: bold;
+            padding: 0 1rem;
         }
-
 
         @keyframes pulse {
             0%,
@@ -445,9 +459,11 @@
                 padding: 0 1rem;
             }
 
+            #uni-meow-message,
             #surprise-text {
                 font-size: 1rem;
-                margin-top: 1.5rem;
+                margin-top: 1rem;
+                margin-bottom: 1rem;
             }
 
             .features {
@@ -484,9 +500,11 @@
                 font-size: 1.1rem;
             }
 
+            #uni-meow-message,
             #surprise-text {
                 font-size: 0.9rem;
-                margin-top: 1rem;
+                margin-top: 0.8rem;
+                margin-bottom: 0.8rem;
             }
 
             .feature {
@@ -517,6 +535,7 @@
                 font-size: 1.8rem;
             }
 
+            #uni-meow-message,
             #surprise-text {
                 font-size: 1.4rem;
             }
@@ -556,6 +575,8 @@
 
         <p class="subtitle">The Most Adorable KittyKat in the Universe! 🌟</p>
 
+        <p id="uni-meow-message">It's actually Uni meowing :3</p>
+
         <div class="features">
             <a href="https://discord.gg/p238Y2yBGC" target="_blank" class="feature">
                 <h3>💖 Discord</h3>
@@ -571,7 +592,7 @@
             </a>
         </div>
 
-        <p id="surprise-text">Click Kohaze for a surprise :3 </p>
+        <p id="surprise-text">Click Kohaze for a surprise! ✨</p>
 
     </div>
 
@@ -715,11 +736,13 @@
         // --- Music Player Control (On Kohaze Picture Click) ---
         const backgroundMusic = document.getElementById('background-music');
         const kohazePicture = document.getElementById('kohaze-picture');
+        const uniMeowMessage = document.getElementById('uni-meow-message'); // Get the new message element
 
         kohazePicture.addEventListener('click', () => {
             if (backgroundMusic.paused) {
                 backgroundMusic.play().then(() => {
                     console.log("Music playing!");
+                    uniMeowMessage.style.opacity = '1'; // Show the message
                 }).catch(error => {
                     console.warn("Music playback prevented:", error);
                     alert("Music could not be played. Please allow media autoplay in your browser settings if you wish for background music.");
@@ -727,6 +750,7 @@
             } else {
                 backgroundMusic.pause();
                 console.log("Music paused!");
+                uniMeowMessage.style.opacity = '0'; // Hide the message
             }
         });
     </script>
