@@ -38,8 +38,10 @@
         }
 
         .custom-cursor {
-            width: 20px;
-            height: 20px;
+            width: 8px;
+            /* Changed from 20px */
+            height: 8px;
+            /* Changed from 20px */
             border-radius: 50%;
             background: radial-gradient(circle, #ff69b4, #ff1493);
             position: fixed;
@@ -47,17 +49,6 @@
             z-index: 9999;
             transition: transform 0.1s ease;
             box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
-        }
-
-        .cursor-follower {
-            width: 40px;
-            height: 40px;
-            border: 2px solid rgba(255, 105, 180, 0.4);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9998;
-            transition: all 0.3s ease;
         }
 
         .container {
@@ -516,7 +507,6 @@
 
 <body>
     <div class="custom-cursor"></div>
-    <div class="cursor-follower"></div>
 
     <div class="container">
         <div class="floating-particles" id="particles"></div>
@@ -536,15 +526,15 @@
         <div class="features">
             <a href="https://discord.gg/p238Y2yBGC" target="_blank" class="feature">
                 <h3>💖 Discord</h3>
-                <p>Join my magical server</p>
+                <p>Join my server</p>
             </a>
             <a href="https://www.tiktok.com/@meowpcs" target="_blank" class="feature">
                 <h3>🌸 TikTok</h3>
-                <p>Follow @meowpcs for cuteness</p>
+                <p>Follow @meowpcs</p>
             </a>
             <a href="https://www.instagram.com/intelarcy" target="_blank" class="feature">
                 <h3>✨ Instagram</h3>
-                <p>Follow @intelarcy for updates</p>
+                <p>Follow @intelarcy</p>
             </a>
         </div>
     </div>
@@ -552,16 +542,10 @@
     <script>
         // Custom cursor
         const cursor = document.querySelector('.custom-cursor');
-        const cursorFollower = document.querySelector('.cursor-follower');
 
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
-
-            setTimeout(() => {
-                cursorFollower.style.left = e.clientX + 'px';
-                cursorFollower.style.top = e.clientY + 'px';
-            }, 100);
         });
 
         // Create floating particles
@@ -593,7 +577,7 @@
         // Create floating icons
         function createFloatingIcons() {
             const iconsContainer = document.getElementById('floatingIcons');
-            const icons = ['🐱', '🌟', '✨', '💫', '🎀', '🌸', '💕', '🦄', '🌈', '⭐'];
+            const icons = ['🐱', '🌟', '✨', '💫', '🎀', '🌸', '💕', '🦄', '🌈', '⭐', '💖', '💗', '💘', '💞', '💓', '💝', '💜', '💛',];
 
             for (let i = 0; i < 30; i++) {
                 const icon = document.createElement('div');
@@ -685,12 +669,10 @@
         document.querySelectorAll('.feature').forEach(feature => {
             feature.addEventListener('mouseenter', () => {
                 cursor.style.transform = 'scale(1.5)';
-                cursorFollower.style.transform = 'scale(1.5)';
             });
 
             feature.addEventListener('mouseleave', () => {
                 cursor.style.transform = 'scale(1)';
-                cursorFollower.style.transform = 'scale(1)';
             });
         });
     </script>
