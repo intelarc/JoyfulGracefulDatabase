@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kohaze - The Coolest Cat</title>
+    <link rel="icon" href="kohaze.png" type="image/png">
     <style>
         * {
             margin: 0;
@@ -23,9 +24,17 @@
         }
 
         @keyframes backgroundShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .custom-cursor {
@@ -90,8 +99,15 @@
                 transform: translateY(100vh) rotate(0deg);
                 opacity: 0;
             }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
             100% {
                 transform: translateY(-100vh) rotate(360deg);
                 opacity: 0;
@@ -103,8 +119,15 @@
                 transform: translateY(100vh) rotate(0deg) scale(0.5);
                 opacity: 0;
             }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
             100% {
                 transform: translateY(-100vh) rotate(360deg) scale(1.2);
                 opacity: 0;
@@ -130,14 +153,27 @@
         }
 
         @keyframes glow {
-            from { text-shadow: 0 0 20px rgba(255, 105, 180, 0.5); }
-            to { text-shadow: 0 0 30px rgba(255, 105, 180, 0.8), 0 0 40px rgba(255, 182, 193, 0.6); }
+            from {
+                text-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+            }
+
+            to {
+                text-shadow: 0 0 30px rgba(255, 105, 180, 0.8), 0 0 40px rgba(255, 182, 193, 0.6);
+            }
         }
 
         @keyframes textGradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .cat-container {
@@ -173,8 +209,13 @@
         }
 
         @keyframes shine {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .cat-frame:hover {
@@ -183,9 +224,17 @@
         }
 
         @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .cat-image {
@@ -214,8 +263,15 @@
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
         }
 
         .features {
@@ -300,8 +356,13 @@
         }
 
         @keyframes pawFloat {
-            0% { transform: translate(0, 100vh) rotate(0deg); }
-            100% { transform: translate(50px, -100vh) rotate(360deg); }
+            0% {
+                transform: translate(0, 100vh) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(50px, -100vh) rotate(360deg);
+            }
         }
 
         .sparkle {
@@ -314,8 +375,17 @@
         }
 
         @keyframes sparkle {
-            0%, 100% { opacity: 0; transform: scale(0); }
-            50% { opacity: 1; transform: scale(1); }
+
+            0%,
+            100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .floating-icons {
@@ -334,10 +404,23 @@
         }
 
         @keyframes iconFloat {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.2; }
-            90% { opacity: 0.2; }
-            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.2;
+            }
+
+            90% {
+                opacity: 0.2;
+            }
+
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
         }
 
         /* Responsive Design */
