@@ -16,14 +16,17 @@
 
         /* Body and Background - Dark Theme */
         body {
-            font-family: 'Inter', sans-serif; /* Using Inter as per instructions */
+            font-family: 'Inter', sans-serif;
+            /* Using Inter as per instructions */
             background: linear-gradient(135deg, #1a052e 0%, #2c0a3d 30%, #0f031c 60%, #3a0f50 100%);
             background-size: 400% 400%;
             animation: backgroundShift 8s ease infinite;
             min-height: 100vh;
             overflow-x: hidden;
-            cursor: none; /* Hide default cursor */
-            color: #e0b0ff; /* Light purple for general text */
+            cursor: none;
+            /* Hide default cursor */
+            color: #e0b0ff;
+            /* Light purple for general text */
         }
 
         /* Background Animation */
@@ -46,7 +49,8 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: radial-gradient(circle, #ff69b4, #ff1493); /* Bright pink/red for visibility */
+            background: radial-gradient(circle, #ff69b4, #ff1493);
+            /* Bright pink/red for visibility */
             position: fixed;
             pointer-events: none;
             z-index: 9999;
@@ -63,7 +67,8 @@
             justify-content: center;
             padding: 20px;
             position: relative;
-            z-index: 5; /* Ensure content is above particles */
+            z-index: 5;
+            /* Ensure content is above particles */
         }
 
         /* Floating Particles */
@@ -79,7 +84,8 @@
             position: absolute;
             width: 8px;
             height: 8px;
-            background: rgba(173, 216, 230, 0.6); /* Light blue for particles */
+            background: rgba(173, 216, 230, 0.6);
+            /* Light blue for particles */
             border-radius: 50%;
             animation: float 15s infinite linear;
         }
@@ -87,7 +93,8 @@
         .heart-particle {
             position: absolute;
             font-size: 20px;
-            color: rgba(255, 105, 180, 0.7); /* Pink hearts */
+            color: rgba(255, 105, 180, 0.7);
+            /* Pink hearts */
             animation: heartFloat 12s infinite linear;
         }
 
@@ -134,15 +141,18 @@
         /* Page Title */
         .title {
             font-size: 4rem;
-            color: #f0e68c; /* Khaki/light yellow for title */
+            color: #f0e68c;
+            /* Khaki/light yellow for title */
             text-align: center;
             margin-bottom: 2rem;
-            text-shadow: 0 0 20px rgba(240, 230, 140, 0.5); /* Yellowish glow */
+            text-shadow: 0 0 20px rgba(240, 230, 140, 0.5);
+            /* Yellowish glow */
             animation: glow 2s ease-in-out infinite alternate;
             z-index: 10;
             position: relative;
             font-weight: bold;
-            background: linear-gradient(45deg, #f0e68c, #add8e6, #e0b0ff, #f0e68c); /* Gradient for text */
+            background: linear-gradient(45deg, #f0e68c, #add8e6, #e0b0ff, #f0e68c);
+            /* Gradient for text */
             background-size: 400% 400%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -176,7 +186,8 @@
 
         /* Subtitle */
         .subtitle {
-            color: #add8e6; /* Light blue for subtitle */
+            color: #add8e6;
+            /* Light blue for subtitle */
             font-size: 1.5rem;
             text-align: center;
             margin-bottom: 2rem;
@@ -199,14 +210,16 @@
 
         /* Content Section - PC Specs */
         .specs-section {
-            background: rgba(0, 0, 0, 0.3); /* Darker transparent background */
+            background: rgba(0, 0, 0, 0.3);
+            /* Darker transparent background */
             backdrop-filter: blur(15px);
             border-radius: 25px;
             padding: 3rem;
             margin: 2rem 0;
             max-width: 900px;
             width: 90%;
-            border: 2px solid rgba(160, 32, 240, 0.5); /* Dark purple border */
+            border: 2px solid rgba(160, 32, 240, 0.5);
+            /* Dark purple border */
             box-shadow: 0 0 40px rgba(160, 32, 240, 0.4);
             text-align: center;
             position: relative;
@@ -221,7 +234,8 @@
 
         .specs-section h2 {
             font-size: 2.5rem;
-            color: #f0e68c; /* Khaki/light yellow */
+            color: #e0b0ff;
+            /* Changed to light purple for the heading */
             margin-bottom: 1.5rem;
             text-shadow: 0 0 15px rgba(240, 230, 140, 0.4);
         }
@@ -230,7 +244,8 @@
             font-size: 1.2rem;
             line-height: 1.6;
             margin-bottom: 1rem;
-            color: #e0b0ff; /* Light purple */
+            color: #e0b0ff;
+            /* Light purple */
         }
 
         .specs-list {
@@ -249,48 +264,28 @@
             padding: 1rem 1.5rem;
             border: 1px solid rgba(160, 32, 240, 0.3);
             transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            /* Initial subtle shadow */
         }
 
         .specs-list li:hover {
             background: rgba(0, 0, 0, 0.4);
             border-color: rgba(160, 32, 240, 0.7);
             transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(160, 32, 240, 0.5), 0 0 30px rgba(173, 216, 230, 0.2);
+            /* Enhanced glow on hover */
         }
 
         .specs-list strong {
-            color: #add8e6; /* Light blue for labels */
-        }
-
-        /* PC Image */
-        .pc-image-container {
-            margin-top: 3rem;
-            margin-bottom: 2rem;
-            border-radius: 25px;
-            overflow: hidden;
-            box-shadow: 0 0 50px rgba(160, 32, 240, 0.5);
-            transition: all 0.3s ease;
-            max-width: 700px;
-            width: 90%;
-            position: relative;
-            z-index: 10;
-        }
-
-        .pc-image-container:hover {
-            transform: scale(1.03);
-            box-shadow: 0 0 80px rgba(160, 32, 240, 0.8), 0 0 120px rgba(173, 216, 230, 0.4);
-        }
-
-        .pc-image {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 20px; /* Inner border-radius */
+            color: #add8e6;
+            /* Reverted to light blue for labels */
         }
 
         /* Back Button */
         .back-button {
             display: inline-block;
-            background: linear-gradient(45deg, #a020f0, #8a2be2); /* Purple gradient */
+            background: linear-gradient(45deg, #a020f0, #8a2be2);
+            /* Purple gradient */
             color: #fff;
             padding: 1rem 2rem;
             border-radius: 30px;
@@ -323,7 +318,8 @@
         .back-button:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(160, 32, 240, 0.6);
-            background: linear-gradient(45deg, #8a2be2, #a020f0); /* Invert gradient on hover */
+            background: linear-gradient(45deg, #8a2be2, #a020f0);
+            /* Invert gradient on hover */
         }
 
 
@@ -340,9 +336,11 @@
             position: absolute;
             width: 30px;
             height: 30px;
-            opacity: 0.1; /* More subtle on dark background */
+            opacity: 0.1;
+            /* More subtle on dark background */
             animation: pawFloat 20s infinite linear;
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2)); /* Light glow for paws */
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+            /* Light glow for paws */
         }
 
         @keyframes pawFloat {
@@ -359,7 +357,8 @@
             position: absolute;
             width: 4px;
             height: 4px;
-            background: #ffd700; /* Gold sparkles */
+            background: #a020f0;
+            /* Changed to purple */
             border-radius: 50%;
             animation: sparkle 2s infinite;
         }
@@ -388,9 +387,11 @@
         .floating-icon {
             position: absolute;
             font-size: 24px;
-            opacity: 0.15; /* More subtle on dark background */
+            opacity: 0.15;
+            /* More subtle on dark background */
             animation: iconFloat 15s infinite linear;
-            filter: drop-shadow(0 0 8px rgba(173, 216, 230, 0.3)); /* Light blue glow for icons */
+            filter: drop-shadow(0 0 8px rgba(173, 216, 230, 0.3));
+            /* Light blue glow for icons */
         }
 
         @keyframes iconFloat {
@@ -453,7 +454,8 @@
             }
 
             .specs-list {
-                grid-template-columns: 1fr; /* Stack items on small screens */
+                grid-template-columns: 1fr;
+                /* Stack items on small screens */
                 gap: 1rem;
             }
 
@@ -506,37 +508,30 @@
 
         <h1 class="title">My PC Specs ⚙️</h1>
 
-        <p class="subtitle">A closer look at the heart of my digital world!</p>
+        <p class="subtitle">A closer look at my hardware!</p>
 
         <div class="specs-section">
-            <h2>Core Components</h2>
-            <p>This is where the magic happens! My current build is designed for a balance of gaming, content creation, and everyday productivity.</p>
+            <h2>Components</h2>
             <ul class="specs-list">
-                <li><strong>CPU:</strong> AMD Ryzen 7 5800X3D</li>
-                <li><strong>GPU:</strong> NVIDIA GeForce RTX 4070 Ti SUPER</li>
-                <li><strong>Motherboard:</strong> ASUS ROG Strix B550-F Gaming WiFi II</li>
-                <li><strong>RAM:</strong> 32GB (2x16GB) Corsair Vengeance RGB Pro SL DDR4 3600MHz</li>
-                <li><strong>Storage (OS):</strong> 1TB Samsung 970 EVO Plus NVMe SSD</li>
-                <li><strong>Storage (Games/Data):</strong> 2TB Crucial P5 Plus NVMe SSD</li>
-                <li><strong>PSU:</strong> Corsair RM850x 850W 80+ Gold Fully Modular</li>
-                <li><strong>Cooling:</strong> Noctua NH-D15 Chromax.black CPU Cooler</li>
-                <li><strong>Case:</strong> Fractal Design Meshify 2 Compact</li>
+                <li><strong>CPU:</strong> AMD Ryzen 7 5700X</li>
+                <li><strong>GPU:</strong> Intel Arc A750 Limited Editon</li>
+                <li><strong>Motherboard:</strong> Gigabyte B550 Gaming X V2</li>
+                <li><strong>RAM:</strong> 32GB (2x16GB) Adata XPG 3600MHZ Ram</li>
+                <li><strong>Storage (OS):</strong> 1TB Lexar NM790 Pcie Gen 4</li>
+                <li><strong>Storage (Games/Data):</strong> 1TB Lexar NQ790 Pcie Gen 4</li>
+                <li><strong>PSU:</strong> SliverStone Da650W Modular</li>
+                <li><strong>Cooling:</strong> EKWB Basic 240MM AIO</li>
+                <li><strong>Case:</strong> Phanteks G500a</li>
             </ul>
 
-            <h2>Peripherals & Displays</h2>
-            <p>The tools I use to interact with my digital playground.</p>
-            <ul class="specs-list">
-                <li><strong>Main Monitor:</strong> LG 27GL850-B 27" 1440p 144Hz IPS</li>
-                <li><strong>Secondary Monitor:</strong> Dell S2721QS 27" 4K 60Hz IPS</li>
-                <li><strong>Keyboard:</strong> Keychron Q1 Pro (Custom Build)</li>
-                <li><strong>Mouse:</strong> Logitech G Pro X Superlight 2</li>
-                <li><strong>Headset:</strong> Sennheiser HD 660 S2 with Schiit Magni/Modi Stack</li>
-                <li><strong>Webcam:</strong> Logitech C920S</li>
-            </ul>
-        </div>
 
-        <div class="pc-image-container">
-            <img src="https://placehold.co/700x450/3a0f50/e0b0ff?text=My+Awesome+PC" alt="My Custom Built PC" class="pc-image">
+            <ul class="specs-list">
+                <li><strong>Main Monitor:</strong> ViewSonic VS18277 1440P 144HZ</li>
+                <li><strong>Keyboard:</strong> Wevika D75 - Gateron Smoothies (Custom Build)</li>
+                <li><strong>Mouse:</strong> ATK MAD R & Mchose L7 Ultra 8K</li>
+                <li><strong>Headset:</strong> Sennheiser PXC 550II</li>
+                <li><strong>Speakers:</strong> Edifer MR4</li>
+            </ul>
         </div>
 
         <a href="index.html" class="back-button">Back to Home</a>
