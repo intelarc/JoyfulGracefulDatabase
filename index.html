@@ -644,11 +644,11 @@
             </a>
             <a href="computer_specs.html" class="feature">
                 <h3>💻 My PC Specs</h3>
-                <p>Check out my computer's details</p>
+                <p>computer details</p>
             </a>
         </div>
 
-        <p id="surprise-text">Tap Kohaze for a surprise! ✨</p>
+        <p id="surprise-text">Tap Kohaze for a surprise! </p>
 
     </div>
 
@@ -855,9 +855,9 @@
                         console.log("Music playing!");
                         uniMeowMessage.style.opacity = '1';
                         if (isMobile) {
-                            surpriseText.textContent = 'Tap Kohaze again to pause! ✨';
+                            surpriseText.textContent = 'Tap Kohaze again to pause! ';
                         } else {
-                            surpriseText.textContent = 'Click Kohaze again to pause! ✨';
+                            surpriseText.textContent = 'Click Kohaze again to pause! ';
                         }
                     }).catch(error => {
                         console.warn("Music playback prevented:", error);
@@ -868,9 +868,9 @@
                     console.log("Music paused!");
                     uniMeowMessage.style.opacity = '0';
                     if (isMobile) {
-                        surpriseText.textContent = 'Tap Kohaze for a surprise! ✨';
+                        surpriseText.textContent = 'Tap Kohaze for a surprise! ';
                     } else {
-                        surpriseText.textContent = 'Click Kohaze for a surprise! ✨';
+                        surpriseText.textContent = 'Click Kohaze for a surprise! ';
                     }
                 }
             }
