@@ -37,8 +37,8 @@
             width: 100%;
             height: 100%;
             background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+                                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+                                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
             pointer-events: none;
             z-index: 1;
             /* Performance optimization for overlay */
@@ -111,8 +111,8 @@
             animation: gradientShift 5s ease infinite;
             padding: 12px;
             box-shadow: 0 0 60px rgba(160, 32, 240, 0.6),
-                        0 0 120px rgba(160, 32, 240, 0.3),
-                        inset 0 0 40px rgba(255, 255, 255, 0.1);
+                                0 0 120px rgba(160, 32, 240, 0.3),
+                                inset 0 0 40px rgba(255, 255, 255, 0.1);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
@@ -150,13 +150,19 @@
         .cat-frame:hover {
             transform: scale(1.08) rotate(3deg);
             box-shadow: 0 0 100px rgba(160, 32, 240, 0.8),
-                        0 0 150px rgba(160, 32, 240, 0.5),
-                        0 0 200px rgba(173, 216, 230, 0.3);
+                                0 0 150px rgba(160, 32, 240, 0.5),
+                                0 0 200px rgba(173, 216, 230, 0.3);
             animation-duration: 3s;
         }
         .cat-frame:active {
             transform: scale(0.98);
             box-shadow: 0 0 80px rgba(160, 32, 240, 0.7);
+        }
+        /* Focus state for accessibility */
+        .cat-frame:focus-visible {
+            outline: 2px solid #f0e68c;
+            outline-offset: 4px;
+            box-shadow: 0 0 0 6px rgba(240, 230, 140, 0.5);
         }
         @keyframes gradientShift {
             0%, 100% { background-position: 0% 50%; }
@@ -180,7 +186,7 @@
             color: #add8e6;
             font-size: clamp(1.2rem, 5vw, 1.8rem);
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 0.5rem; /* Adjusted for tighter spacing with surprise-text */
             z-index: 10;
             position: relative;
             text-shadow: 0 0 15px rgba(173, 216, 230, 0.5);
@@ -198,37 +204,39 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
-        #uni-meow-message {
+        #surprise-text { /* This will be the initially visible "Tap Kohaze..." message */
+            color: #e0b0ff;
+            font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+            text-align: center;
+            margin-top: 0.5rem; /* Space from subtitle */
+            margin-bottom: 2rem;
+            z-index: 10;
+            position: relative;
+            text-shadow: 0 0 12px rgba(240, 230, 140, 0.6);
+            animation: surpriseGlow 3s ease-in-out infinite; /* Keep the glow animation */
+            font-weight: 600;
+            padding: 0 1rem;
+            will-change: opacity; /* Add will-change */
+            /* No initial background/border/blur as it's the main prompt now */
+        }
+        #uni-meow-message { /* This will be the temporary music status message */
             color: #e0b0ff;
             font-size: clamp(1.1rem, 3.5vw, 1.3rem);
             text-align: center;
-            margin-top: -1rem;
+            margin-top: -1rem; /* Adjust as needed for positioning */
             margin-bottom: 2rem;
             z-index: 10;
             position: relative;
             text-shadow: 0 0 12px rgba(240, 230, 140, 0.6);
             font-weight: 600;
-            opacity: 0;
+            opacity: 0; /* Start hidden */
             transition: opacity 0.6s ease-in-out;
-            padding: 0 1rem;
+            padding: 10px 20px; /* Add padding for the message box */
             background: rgba(0, 0, 0, 0.2);
             border-radius: 20px;
-            padding: 10px 20px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(224, 176, 255, 0.3);
             will-change: opacity; /* Add will-change */
-        }
-        #surprise-text {
-            color: #add8e6;
-            font-size: clamp(1.1rem, 3.5vw, 1.4rem);
-            text-align: center;
-            margin-top: 2rem;
-            z-index: 10;
-            position: relative;
-            text-shadow: 0 0 12px rgba(173, 216, 230, 0.5);
-            animation: surpriseGlow 3s ease-in-out infinite;
-            font-weight: 600;
-            padding: 0 1rem;
         }
         @keyframes surpriseGlow {
             0%, 100% {
@@ -307,13 +315,19 @@
             background: rgba(0, 0, 0, 0.5);
             border-color: rgba(160, 32, 240, 0.9);
             box-shadow: 0 20px 50px rgba(160, 32, 240, 0.4),
-                        0 0 60px rgba(160, 32, 240, 0.3);
+                                0 0 60px rgba(160, 32, 240, 0.3);
             text-decoration: none;
             color: #add8e6;
         }
         .feature:active {
             transform: translateY(-10px) scale(0.98);
             box-shadow: 0 15px 40px rgba(160, 32, 240, 0.5);
+        }
+        /* Focus state for accessibility */
+        .feature:focus-visible {
+            outline: 2px solid #add8e6;
+            outline-offset: 4px;
+            box-shadow: 0 0 0 6px rgba(173, 216, 230, 0.4);
         }
         .feature h3 {
             font-size: clamp(1.3rem, 4vw, 1.6rem);
@@ -476,7 +490,10 @@
                 margin-bottom: 1.5rem;
             }
             .subtitle {
-                margin-bottom: 1.5rem;
+                margin-bottom: 1rem; /* Slightly more space on smaller screens */
+            }
+            #uni-meow-message {
+                margin-top: -0.5rem;
             }
         }
 
@@ -525,11 +542,12 @@
         <h1 class="title">KOHAZE ✨</h1>
         <div class="cat-container">
             <div class="cat-frame">
-                <img src="kohaze.png" alt="Kohaze the adorable cat" class="cat-image" id="kohaze-picture">
+                <img src="kohaze.png" alt="Kohaze the adorable cat" class="cat-image" id="kohaze-picture" role="button" aria-label="Tap to play or pause background music and discover surprise messages">
             </div>
         </div>
         <p class="subtitle">The Most Adorable KittyKat in the Universe! 🌟</p>
-        <p id="uni-meow-message">It's actually Uni meowing :3</p>
+        <p id="surprise-text">Tap Kohaze for a surprise! 🎵</p> <p id="uni-meow-message">It's actually Uni meowing :3</p>
+
         <div class="features">
             <a href="https://discord.gg/p238Y2yBGC" target="_blank" class="feature">
                 <h3>💖 Discord</h3>
@@ -548,7 +566,6 @@
                 <p>Computer details</p>
             </a>
         </div>
-        <p id="surprise-text">Tap Kohaze for a surprise! 🎵</p>
     </div>
     <script>
         // Performance optimizations based on device type and user preferences
@@ -567,13 +584,26 @@
                 createParticles();
                 createFloatingIcons();
                 createPawPrints();
-                document.addEventListener('mousemove', createTrail);
-                document.addEventListener('touchmove', createTrail);
+                document.addEventListener('mousemove', debounce(createTrail, 10)); // Debounced for performance
+                document.addEventListener('touchmove', debounce(createTrail, 10));
             } else {
                 // If reduced motion is preferred, remove the containers from the DOM entirely
-                document.getElementById('particles').remove();
-                document.getElementById('floatingIcons').remove();
-                document.getElementById('pawPrints').remove();
+                const particlesEl = document.getElementById('particles');
+                if (particlesEl) particlesEl.remove();
+                const floatingIconsEl = document.getElementById('floatingIcons');
+                if (floatingIconsEl) floatingIconsEl.remove();
+                const pawPrintsEl = document.getElementById('pawPrints');
+                if (pawPrintsEl) pawPrintsEl.remove();
+            }
+
+            // Debounce function for performance
+            function debounce(func, delay) {
+                let timeout;
+                return function(...args) {
+                    const context = this;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(context, args), delay);
+                };
             }
 
             function createParticles() {
@@ -632,6 +662,7 @@
                 if (prefersReducedMotion) return; // Do not create trail if reduced motion is preferred
 
                 const trail = document.createElement('div');
+                // Get clientX/Y from event, accounting for touch events
                 const x = e.clientX || (e.touches && e.touches[0].clientX);
                 const y = e.clientY || (e.touches && e.touches[0].clientY);
 
@@ -650,12 +681,22 @@
             const kohazePicture = document.getElementById('kohaze-picture');
             const backgroundMusic = document.getElementById('background-music');
             const uniMeowMessage = document.getElementById('uni-meow-message');
-            let isPlaying = false;
+            const surpriseText = document.getElementById('surprise-text');
+
+            let isPlaying = false; // Track if music is playing
+
+            // Initial state: hide uniMeowMessage and show surpriseText
+            uniMeowMessage.style.opacity = 0;
+            surpriseText.style.opacity = 1; // Ensure surpriseText is visible initially
+            surpriseText.textContent = "Tap Kohaze for a surprise! 🎵"; // Set initial text
+
 
             kohazePicture.addEventListener('click', function() {
                 if (backgroundMusic.paused) {
                     backgroundMusic.play().then(() => {
                         isPlaying = true;
+                        // Music ON: Update surpriseText and show uniMeowMessage
+                        surpriseText.textContent = "It's actually Uni meowing :3";
                         uniMeowMessage.textContent = "Meow! Music ON! 🎶";
                         uniMeowMessage.style.opacity = 1;
                         setTimeout(() => { uniMeowMessage.style.opacity = 0; }, 3000);
@@ -668,36 +709,16 @@
                 } else {
                     backgroundMusic.pause();
                     isPlaying = false;
+                    // Music OFF: Revert surpriseText and show pause message
+                    surpriseText.textContent = "Tap Kohaze for a surprise! 🎵";
                     uniMeowMessage.textContent = "Zzz... Music OFF.";
                     uniMeowMessage.style.opacity = 1;
                     setTimeout(() => { uniMeowMessage.style.opacity = 0; }, 3000);
                 }
             });
 
-            if (backgroundMusic.paused) {
-                uniMeowMessage.textContent = "Tap Kohaze to hear Uni meow! 🐾";
-                uniMeowMessage.style.opacity = 1;
-                setTimeout(() => { uniMeowMessage.style.opacity = 0; }, 3000);
-            }
-
-            const surpriseText = document.getElementById('surprise-text');
-            let surpriseClickCount = 0;
-            const surpriseMessages = [
-                "You found a secret meow!",
-                "Purr-fect click!",
-                "Another meow for you!",
-                "Keep clicking for more surprises!",
-                "A truly adorable tap!",
-                "You're the best human!"
-            ];
-
-            kohazePicture.addEventListener('click', function() {
-                surpriseClickCount++;
-                if (surpriseClickCount > 1) {
-                    const randomMessage = surpriseMessages[Math.floor(Math.random() * surpriseMessages.length)];
-                    surpriseText.textContent = randomMessage;
-                }
-            });
+            // No separate surpriseClickCount logic for dynamic messages,
+            // as the surpriseText now primarily reflects the music state.
         });
     </script>
 </body>
