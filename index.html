@@ -512,8 +512,9 @@
                 transition-duration: 0.1s !important;
             }
         }
-        /* Enhanced message box */
-        .message-box {
+        /* The .message-box and related animations are no longer needed
+           if the welcome message is fully removed. You could remove this CSS too. */
+        /* .message-box {
             position: fixed;
             top: 50%;
             left: 50%;
@@ -564,7 +565,7 @@
         }
         .message-box button:active {
             transform: scale(0.95);
-        }
+        } */
         /* Enhanced trail effect */
         /* This animation is used by the sparkle class directly now */
         /* @keyframes trailFade {
@@ -763,14 +764,25 @@
                 }
             });
 
-        
+            // Optional: Show message on initial load if music isn't playing
+            if (backgroundMusic.paused) {
+                uniMeowMessage.textContent = "Tap Kohaze to hear Uni meow! 🐾";
+                uniMeowMessage.style.opacity = 1;
+                setTimeout(() => {
+                    uniMeowMessage.style.opacity = 0;
+                }, 3000);
+            }
 
             // Add a simple 'surprise' logic for the surprise text
             const surpriseText = document.getElementById('surprise-text');
             let surpriseClickCount = 0;
             const surpriseMessages = [
-                "its acutally uni meowing",
-            
+                "You found a secret meow!",
+                "Purr-fect click!",
+                "Another meow for you!",
+                "Keep clicking for more surprises!",
+                "A truly adorable tap!",
+                "You're the best human!"
             ];
 
             kohazePicture.addEventListener('click', function() {
@@ -782,32 +794,6 @@
                     surpriseText.textContent = randomMessage;
                 }
             });
-
-            // Welcome Message Box
-            const showWelcomeMessage = () => {
-                const messageBox = document.createElement('div');
-                messageBox.className = 'message-box';
-                messageBox.innerHTML = `
-                    <h2>Welcome, Future Friend!</h2>
-                    <p>Get ready to experience the most adorable corner of the internet. Tap Kohaze to start the purr-fect adventure!</p>
-                    <button id="close-welcome-message">Let's Play!</button>
-                `;
-                document.body.appendChild(messageBox);
-
-                document.getElementById('close-welcome-message').addEventListener('click', () => {
-                    messageBox.style.opacity = 0;
-                    messageBox.style.transform = 'translate(-50%, -50%) scale(0.8)';
-                    setTimeout(() => {
-                        messageBox.remove();
-                    }, 500);
-                });
-            };
-
-            // Show welcome message only once per session
-            if (!sessionStorage.getItem('kohazeWelcomeShown')) {
-                showWelcomeMessage();
-                sessionStorage.setItem('kohazeWelcomeShown', 'true');
-            }
         });
     </script>
 </body>
