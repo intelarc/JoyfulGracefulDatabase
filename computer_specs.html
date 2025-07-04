@@ -3,62 +3,57 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Kohaze - My PC Specs</title>
     <link rel="icon" href="kohaze.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* General Reset */
+        /* Base styles for all devices */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* Body and Background - Dark Theme */
         body {
-            font-family: 'Inter', sans-serif;
-            /* Using Inter as per instructions */
-            background: linear-gradient(135deg, #1a052e 0%, #2c0a3d 30%, #0f031c 60%, #3a0f50 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0015 0%, #1a0533 25%, #2d0a4f 50%, #0f0329 75%, #4a1866 100%);
             background-size: 400% 400%;
-            animation: backgroundShift 8s ease infinite;
+            animation: backgroundShift 15s ease infinite alternate; /* Slower, smoother shift */
             min-height: 100vh;
             overflow-x: hidden;
-            cursor: none;
-            /* Hide default cursor */
             color: #e0b0ff;
-            /* Light purple for general text */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            position: relative;
+            will-change: background-position;
         }
 
-        /* Background Animation */
-        @keyframes backgroundShift {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        /* Custom Cursor */
-        .custom-cursor {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: radial-gradient(circle, #ff69b4, #ff1493);
-            /* Bright pink/red for visibility */
+        /* Gradient overlay for subtle light effects - more prominent and active */
+        body::before {
+            content: '';
             position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--mouse-x, 20%) var(--mouse-y, 80%), rgba(120, 119, 198, 0.15) 0%, transparent 40%),
+                        radial-gradient(circle at calc(100% - var(--mouse-x, 80%)) calc(100% - var(--mouse-y, 20%)), rgba(255, 119, 198, 0.15) 0%, transparent 40%),
+                        radial-gradient(circle at 50% 50%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
             pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.1s ease;
-            box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
+            z-index: 1;
+            will-change: background, transform;
+            transition: background 0.1s linear; /* Smooth movement of the gradient with mouse */
         }
 
-        /* Container for content */
+        @keyframes backgroundShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         .container {
             min-height: 100vh;
             display: flex;
@@ -67,185 +62,120 @@
             justify-content: center;
             padding: 20px;
             position: relative;
-            z-index: 5;
-            /* Ensure content is above particles */
+            z-index: 2;
+            gap: 2rem; /* Spacing between main sections */
         }
 
-        /* Floating Particles */
-        .floating-particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 1;
+        /* Elements with animations/transitions should have will-change */
+        .title, .subtitle, .specs-section, .back-button, .pc-image-container {
+            will-change: transform, opacity, filter, background-position, box-shadow, text-shadow;
         }
 
-        .particle {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: rgba(173, 216, 230, 0.6);
-            /* Light blue for particles */
-            border-radius: 50%;
-            animation: float 15s infinite linear;
-        }
-
-        .heart-particle {
-            position: absolute;
-            font-size: 20px;
-            color: rgba(255, 105, 180, 0.7);
-            /* Pink hearts */
-            animation: heartFloat 12s infinite linear;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-
-            10% {
-                opacity: 1;
-            }
-
-            90% {
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateY(-100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        @keyframes heartFloat {
-            0% {
-                transform: translateY(100vh) rotate(0deg) scale(0.5);
-                opacity: 0;
-            }
-
-            10% {
-                opacity: 1;
-            }
-
-            90% {
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateY(-100vh) rotate(360deg) scale(1.2);
-                opacity: 0;
-            }
-        }
-
-        /* Page Title */
         .title {
-            font-size: 4rem;
+            font-size: clamp(2.5rem, 10vw, 5rem);
             color: #f0e68c;
-            /* Khaki/light yellow for title */
             text-align: center;
-            margin-bottom: 2rem;
-            text-shadow: 0 0 20px rgba(240, 230, 140, 0.5);
-            /* Yellowish glow */
-            animation: glow 2s ease-in-out infinite alternate;
+            margin-bottom: 0; /* Adjusted due to container gap */
+            text-shadow: 0 0 30px rgba(240, 230, 140, 0.8);
+            animation: titleGlow 3s ease-in-out infinite alternate;
             z-index: 10;
             position: relative;
-            font-weight: bold;
-            background: linear-gradient(45deg, #f0e68c, #add8e6, #e0b0ff, #f0e68c);
-            /* Gradient for text */
+            font-weight: 800;
+            background: linear-gradient(45deg, #f0e68c, #add8e6, #e0b0ff, #ffb6c1, #f0e68c);
             background-size: 400% 400%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: glow 2s ease-in-out infinite alternate, textGradient 3s ease infinite;
+            animation: titleGlow 3s ease-in-out infinite alternate, textGradient 4s ease infinite;
+            letter-spacing: 0.1em;
+            padding: 0 10px; /* Add some horizontal padding for smaller screens */
         }
 
-        @keyframes glow {
+        @keyframes titleGlow {
             from {
                 text-shadow: 0 0 20px rgba(240, 230, 140, 0.5);
+                filter: drop-shadow(0 0 20px rgba(240, 230, 140, 0.3));
             }
-
             to {
-                text-shadow: 0 0 30px rgba(240, 230, 140, 0.8), 0 0 40px rgba(173, 216, 230, 0.6);
+                text-shadow: 0 0 40px rgba(240, 230, 140, 1), 0 0 60px rgba(173, 216, 230, 0.8);
+                filter: drop-shadow(0 0 40px rgba(240, 230, 140, 0.6));
             }
         }
-
         @keyframes textGradient {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
-        /* Subtitle */
         .subtitle {
             color: #add8e6;
-            /* Light blue for subtitle */
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 5vw, 1.8rem);
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 0; /* Adjusted due to container gap */
             z-index: 10;
             position: relative;
-            text-shadow: 0 0 10px rgba(173, 216, 230, 0.3);
-            animation: pulse 2s ease-in-out infinite;
+            text-shadow: 0 0 15px rgba(173, 216, 230, 0.5);
+            animation: subtitlePulse 3s ease-in-out infinite;
+            padding: 0 1rem;
+            font-weight: 600;
+            background: linear-gradient(45deg, #add8e6, #e0b0ff, #add8e6);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: subtitlePulse 3s ease-in-out infinite, textGradient 3s ease infinite;
+        }
+        @keyframes subtitlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); } /* Slightly less aggressive pulse */
         }
 
-        @keyframes pulse {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        /* Content Section - PC Specs */
         .specs-section {
-            background: rgba(0, 0, 0, 0.3);
-            /* Darker transparent background */
-            backdrop-filter: blur(15px);
-            border-radius: 25px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
             padding: 3rem;
-            margin: 2rem 0;
-            max-width: 900px;
+            max-width: 900px; /* Same max-width as pc-image-container */
             width: 90%;
-            border: 2px solid rgba(160, 32, 240, 0.5);
-            /* Dark purple border */
-            box-shadow: 0 0 40px rgba(160, 32, 240, 0.4);
+            border: 2px solid rgba(160, 32, 240, 0.6);
+            box-shadow: 0 0 60px rgba(160, 32, 240, 0.6),
+                        0 0 120px rgba(160, 32, 240, 0.3);
             text-align: center;
             position: relative;
             z-index: 10;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden; /* Ensures shadows don't bleed out */
         }
 
         .specs-section:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 0 60px rgba(160, 32, 240, 0.6), 0 0 90px rgba(173, 216, 230, 0.3);
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 0 100px rgba(160, 32, 240, 0.8),
+                        0 0 150px rgba(160, 32, 240, 0.5);
+        }
+        .specs-section:active {
+            transform: translateY(-10px) scale(0.98);
+            box-shadow: 0 0 80px rgba(160, 32, 240, 0.7);
         }
 
         .specs-section h2 {
-            font-size: 2.5rem;
-            color: #e0b0ff;
-            /* Changed to light purple for the heading */
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            color: #f0e68c; /* Primary accent for headings */
             margin-bottom: 1.5rem;
-            text-shadow: 0 0 15px rgba(240, 230, 140, 0.4);
+            text-shadow: 0 0 20px rgba(240, 230, 140, 0.5);
+            font-weight: 700;
+            background: linear-gradient(45deg, #f0e68c, #add8e6, #e0b0ff, #f0e68c);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGradient 3s ease infinite;
         }
 
         .specs-section p {
-            font-size: 1.2rem;
+            font-size: clamp(1.1rem, 3.5vw, 1.2rem);
             line-height: 1.6;
             margin-bottom: 1rem;
             color: #e0b0ff;
-            /* Light purple */
+            opacity: 0.9;
         }
 
         .specs-list {
@@ -253,7 +183,7 @@
             padding: 0;
             margin-top: 1.5rem;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
             text-align: left;
         }
@@ -263,41 +193,139 @@
             border-radius: 15px;
             padding: 1rem 1.5rem;
             border: 1px solid rgba(160, 32, 240, 0.3);
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            /* Initial subtle shadow */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .specs-list li:hover {
             background: rgba(0, 0, 0, 0.4);
             border-color: rgba(160, 32, 240, 0.7);
-            transform: translateY(-5px);
+            transform: translateY(-8px);
             box-shadow: 0 8px 25px rgba(160, 32, 240, 0.5), 0 0 30px rgba(173, 216, 230, 0.2);
-            /* Enhanced glow on hover */
         }
 
         .specs-list strong {
-            color: #add8e6;
-            /* Reverted to light blue for labels */
+            color: #add8e6; /* Light blue for labels */
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+            display: block; /* Make strong take its own line for better separation */
+            font-size: 1.1em;
+            text-shadow: 0 0 8px rgba(173, 216, 230, 0.4);
+        }
+        .specs-list li span { /* Style for the actual value */
+            font-size: 1em;
+            color: #e0b0ff;
+            opacity: 0.9;
         }
 
-        /* Back Button */
+        /* New PC Image Section */
+        .pc-image-container {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            padding: 2.5rem; /* Slightly reduced padding to better align with specs-section visually */
+            max-width: 900px; /* Same max-width as specs-section */
+            width: 90%;
+            border: 2px solid rgba(255, 105, 180, 0.6); /* Pink border */
+            box-shadow: 0 0 50px rgba(255, 105, 180, 0.6),
+                        0 0 100px rgba(255, 105, 180, 0.3);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .pc-image-container:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 0 80px rgba(255, 105, 180, 0.8),
+                        0 0 120px rgba(255, 105, 180, 0.5);
+        }
+
+        .pc-image-container h2 {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            color: #ffb6c1; /* Light pink for this heading */
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffb6c1, #e0b0ff, #ffb6c1);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGradient 3s ease infinite;
+        }
+
+        .pc-image-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0.5); /* Dark placeholder */
+            display: flex; /* Use flexbox for centering placeholder text */
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.6);
+            border: 2px dashed rgba(255, 105, 180, 0.4);
+            transition: all 0.3s ease;
+        }
+        .pc-image-wrapper:hover {
+            border-color: rgba(255, 105, 180, 0.8);
+            box-shadow: 0 0 25px rgba(255, 105, 180, 0.7);
+        }
+
+        .pc-image-wrapper img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* This is key for maintaining aspect ratio and filling the space */
+            display: block;
+            border-radius: 13px; /* Slightly smaller than wrapper border-radius */
+            transition: transform 0.3s ease;
+        }
+        .pc-image-wrapper img:hover {
+            transform: scale(1.03);
+        }
+
+        /* Fallback text for image when no src is provided */
+        .pc-image-wrapper:not(:has(img[src]:not([src=""])))::after {
+             content: "Your PC Image Here"; /* Show only if image src is empty or not present */
+             position: absolute;
+             top: 50%;
+             left: 50%;
+             transform: translate(-50%, -50%);
+             color: rgba(255, 255, 255, 0.5);
+             font-size: 1.2em;
+             pointer-events: none;
+        }
+
+
         .back-button {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             background: linear-gradient(45deg, #a020f0, #8a2be2);
-            /* Purple gradient */
             color: #fff;
             padding: 1rem 2rem;
             border-radius: 30px;
             text-decoration: none;
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 4vw, 1.2rem);
             font-weight: bold;
-            margin-top: 3rem;
             box-shadow: 0 10px 20px rgba(160, 32, 240, 0.4);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             z-index: 10;
             overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            cursor: pointer;
+            height: 60px;
+            margin-top: 1rem; /* Adjust margin due to container gap */
         }
 
         .back-button::before {
@@ -307,8 +335,9 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s ease;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            will-change: left;
         }
 
         .back-button:hover::before {
@@ -316,191 +345,245 @@
         }
 
         .back-button:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
             box-shadow: 0 15px 30px rgba(160, 32, 240, 0.6);
             background: linear-gradient(45deg, #8a2be2, #a020f0);
-            /* Invert gradient on hover */
+            color: #f0e68c;
+        }
+        .back-button:active {
+            transform: translateY(-5px) scale(0.95);
+            box-shadow: 0 8px 20px rgba(160, 32, 240, 0.7);
+        }
+        .back-button:focus-visible {
+            outline: 2px solid #f0e68c;
+            outline-offset: 4px;
+            box-shadow: 0 0 0 6px rgba(240, 230, 140, 0.5);
         }
 
 
-        /* Paw Prints and Floating Icons (adapted for dark theme) */
-        .paw-prints {
+        /* Mouse trail particles (glitter effect) */
+        .glitter-sparkle {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        .paw {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            opacity: 0.1;
-            /* More subtle on dark background */
-            animation: pawFloat 20s infinite linear;
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
-            /* Light glow for paws */
-        }
-
-        @keyframes pawFloat {
-            0% {
-                transform: translate(0, 100vh) rotate(0deg);
-            }
-
-            100% {
-                transform: translate(50px, -100vh) rotate(360deg);
-            }
-        }
-
-        .sparkle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: #a020f0;
-            /* Changed to purple */
+            width: 3px; /* Small glitter size */
+            height: 3px;
+            background: radial-gradient(circle, #ffe0f0, #ff69b4); /* White-pink gradient */
             border-radius: 50%;
-            animation: sparkle 2s infinite;
+            animation: glitterFade 0.8s forwards;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+            pointer-events: none;
+            z-index: 9998; /* Below clickable elements */
+            will-change: transform, opacity;
+            opacity: 0; /* Start invisible */
+            transform: scale(0);
+        }
+        @keyframes glitterFade {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.2) translateY(5px); }
         }
 
-        @keyframes sparkle {
-            0%,
-            100% {
-                opacity: 0;
-                transform: scale(0);
-            }
 
-            50% {
-                opacity: 1;
-                transform: scale(1);
-            }
+        /* Click Sparkle */
+        .click-sparkle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #f0e68c, #a020f0); /* Yellow to purple glow */
+            border-radius: 50%;
+            animation: clickSparkleAnim 0.6s forwards;
+            box-shadow: 0 0 15px rgba(240, 230, 140, 0.8);
+            pointer-events: none;
+            z-index: 9999;
+            will-change: transform, opacity;
+        }
+        @keyframes clickSparkleAnim {
+            0% { opacity: 1; transform: scale(1) rotate(0deg); }
+            100% { opacity: 0; transform: scale(0.1) rotate(270deg); }
         }
 
-        .floating-icons {
+
+        /* Floating Particles, Icons, Paw Prints - Consistent with main page */
+        .floating-particles,
+        .floating-icons,
+        .paw-prints {
             position: absolute;
             width: 100%;
             height: 100%;
             overflow: hidden;
             z-index: 1;
+            contain: strict;
+            pointer-events: none;
         }
 
-        .floating-icon {
+        .particle, .heart-particle, .floating-icon, .paw {
             position: absolute;
+            opacity: 0;
+            will-change: transform, opacity;
+        }
+
+        .particle {
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, rgba(173, 216, 230, 0.8), rgba(173, 216, 230, 0.2));
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+            box-shadow: 0 0 12px rgba(173, 216, 230, 0.4);
+            filter: blur(0.5px); /* Soften for ethereal look */
+        }
+        .heart-particle {
+            font-size: 18px;
+            color: rgba(255, 105, 180, 0.8);
+            animation: heartFloat 16s infinite linear;
+            text-shadow: 0 0 8px rgba(255, 105, 180, 0.6);
+        }
+        .floating-icon {
             font-size: 24px;
-            opacity: 0.15;
-            /* More subtle on dark background */
-            animation: iconFloat 15s infinite linear;
-            filter: drop-shadow(0 0 8px rgba(173, 216, 230, 0.3));
-            /* Light blue glow for icons */
+            opacity: 0.18;
+            animation: iconFloat 18s infinite linear;
+            filter: drop-shadow(0 0 12px rgba(173, 216, 230, 0.4));
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+        }
+        .paw {
+            width: 28px;
+            height: 28px;
+            opacity: 0.12;
+            animation: pawFloat 25s infinite linear;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
         }
 
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg) scale(0.5); opacity: 0; }
+            10% { opacity: 0.7; } /* More opaque */
+            90% { opacity: 0.7; }
+            100% { transform: translateY(-100vh) rotate(360deg) scale(1.2); opacity: 0; }
+        }
+        @keyframes heartFloat {
+            0% { transform: translateY(100vh) rotate(0deg) scale(0.3); opacity: 0; }
+            10% { opacity: 0.8; } /* More opaque */
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-100vh) rotate(360deg) scale(1.5); opacity: 0; }
+        }
         @keyframes iconFloat {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
+            0% { transform: translateY(100vh) rotate(0deg) scale(0.5); opacity: 0; }
+            10% { opacity: 0.25; } /* Slightly more opaque */
+            90% { opacity: 0.25; }
+            100% { transform: translateY(-100vh) rotate(360deg) scale(1.3); opacity: 0; }
+        }
+        @keyframes pawFloat {
+            0% { transform: translate(0, 100vh) rotate(0deg) scale(0.5); opacity: 0.15; } /* Slightly more opaque */
+            50% { transform: translate(30px, 50vh) rotate(180deg) scale(1); }
+            100% { transform: translate(60px, -100vh) rotate(360deg) scale(0.8); opacity: 0.15; }
+        }
 
-            10% {
-                opacity: 0.15;
+        /* Reduce animations for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            body {
+                animation: none !important;
+                background-size: auto; /* Stop background shift */
             }
-
-            90% {
-                opacity: 0.15;
+            body::before { /* Remove interactive background gradient */
+                background: none;
             }
-
-            100% {
-                transform: translateY(-100vh) rotate(360deg);
-                opacity: 0;
+            .title, .subtitle, .specs-section, .back-button, .pc-image-container {
+                animation: none !important;
+                transition: none !important;
+                filter: none !important;
+            }
+            .floating-particles, .floating-icons, .paw-prints {
+                display: none;
+            }
+            .glitter-sparkle, .click-sparkle {
+                display: none; /* Hide interactive sparkles */
+            }
+            .specs-section:hover, .specs-section:active,
+            .pc-image-container:hover, .pc-image-container:active,
+            .back-button:hover, .back-button:active {
+                transform: none !important; /* Disable transforms on hover/active */
+                box-shadow: none !important; /* Disable complex shadows */
+            }
+            .specs-list li:hover {
+                transform: none !important;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important; /* Keep original shadow */
+                border-color: rgba(160, 32, 240, 0.3) !important; /* Keep original border */
+            }
+            .back-button::before {
+                display: none; /* Remove hover animation */
             }
         }
 
-        /* Mouse trail fadeOut animation */
-        @keyframes fadeOut {
-            0% {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-            100% {
-                opacity: 0;
-                transform: scale(0);
-            }
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #a020f0, #8a2be2);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #b030f0, #9a3be2);
+        }
+        html {
+            scrollbar-width: thin;
+            scrollbar-color: #a020f0 rgba(0, 0, 0, 0.1);
         }
 
-
-        /* Responsive Design */
+        /* Responsive adjustments */
         @media (max-width: 768px) {
-            .title {
-                font-size: 2.5rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .subtitle {
-                font-size: 1.2rem;
-                padding: 0 1rem;
-            }
-
-            .specs-section {
-                padding: 2rem;
-                width: 95%;
-            }
-
-            .specs-section h2 {
-                font-size: 2rem;
-            }
-
-            .specs-section p {
-                font-size: 1rem;
-            }
-
-            .specs-list {
-                grid-template-columns: 1fr;
-                /* Stack items on small screens */
-                gap: 1rem;
-            }
-
-            .pc-image-container {
-                width: 95%;
-            }
-
-            .back-button {
-                padding: 0.8rem 1.5rem;
-                font-size: 1rem;
-            }
-
             .container {
                 padding: 15px;
+                gap: 1.5rem;
             }
+            .specs-section, .pc-image-container {
+                padding: 2rem;
+                width: 95%; /* Slightly larger width for better mobile fill */
+            }
+            .specs-list {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .specs-list li {
+                padding: 0.8rem 1.2rem;
+            }
+            .back-button {
+                padding: 0.8rem 1.5rem;
+                height: 50px;
+                margin-top: 1rem;
+            }
+            /* Smaller particles/elements for mobile */
+            .particle { width: 4px; height: 4px; } /* Even smaller */
+            .heart-particle { font-size: 14px; } /* Even smaller */
+            .floating-icon { font-size: 18px; } /* Even smaller */
+            .paw { width: 20px; height: 20px; } /* Even smaller */
+            .glitter-sparkle { width: 2px; height: 2px; }
+            .click-sparkle { width: 5px; height: 5px; } /* Slightly smaller */
         }
 
         @media (max-width: 480px) {
-            .title {
-                font-size: 2rem;
-                margin-bottom: 1rem;
+            .container {
+                padding: 10px;
+                gap: 1rem;
             }
-
-            .subtitle {
-                font-size: 1.1rem;
-            }
-
-            .specs-section {
+            .specs-section, .pc-image-container {
                 padding: 1.5rem;
             }
-
-            .specs-section h2 {
-                font-size: 1.8rem;
+            .specs-section h2, .pc-image-container h2 {
+                font-size: 1.6rem;
             }
-
-            .specs-list li {
-                padding: 0.8rem 1rem;
+            .specs-section p {
+                font-size: 0.9rem;
+            }
+            .back-button {
+                font-size: 0.9rem;
+                height: 45px;
+                padding: 0.7rem 1.2rem;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="custom-cursor"></div>
-
     <div class="container">
         <div class="floating-particles" id="particles"></div>
         <div class="floating-icons" id="floatingIcons"></div>
@@ -508,154 +591,224 @@
 
         <h1 class="title">My PC Specs ⚙️</h1>
 
-        <p class="subtitle">A closer look at my hardware!</p>
+        <p class="subtitle">Dive into the tech that powers my world!</p>
+
+        <div class="pc-image-container">
+            <h2>My Rig</h2>
+            <div class="pc-image-wrapper">
+                <img src="computer.png" alt="My Custom PC Build">
+            </div>
+            <p style="margin-top: 1.5rem; font-style: italic; opacity: 0.8;">💜</p>
+        </div>
 
         <div class="specs-section">
-            <h2>Components</h2>
+            <h2>Core Components</h2>
             <ul class="specs-list">
-                <li><strong>CPU:</strong> AMD Ryzen 7 5700X</li>
-                <li><strong>GPU:</strong> Intel Arc A750 Limited Editon</li>
-                <li><strong>Motherboard:</strong> Gigabyte B550 Gaming X V2</li>
-                <li><strong>RAM:</strong> 32GB (2x16GB) Adata XPG 3600MHZ Ram</li>
-                <li><strong>Storage (OS):</strong> 1TB Lexar NM790 Pcie Gen 4</li>
-                <li><strong>Storage (Games/Data):</strong> 1TB Lexar NQ790 Pcie Gen 4</li>
-                <li><strong>PSU:</strong> SliverStone Da650W Modular</li>
-                <li><strong>Cooling:</strong> EKWB Basic 240MM AIO</li>
-                <li><strong>Case:</strong> Phanteks G500a</li>
+                <li>
+                    <strong>CPU:</strong>
+                    <span>AMD Ryzen 7 5700X</span>
+                </li>
+                <li>
+                    <strong>GPU:</strong>
+                    <span>Intel Arc A750 Limited Editon</span>
+                </li>
+                <li>
+                    <strong>Motherboard:</strong>
+                    <span>Gigabyte B550 Gaming X V2</span>
+                </li>
+                <li>
+                    <strong>RAM:</strong>
+                    <span>32GB (2x16GB) Adata XPG 3600MHZ</span>
+                </li>
+                <li>
+                    <strong>Storage (OS):</strong>
+                    <span>1TB Lexar NM790 PCIe Gen 4</span>
+                </li>
+                <li>
+                    <strong>Storage (Games/Data):</strong>
+                    <span>1TB Lexar NQ790 PCIe Gen 4</span>
+                </li>
+                <li>
+                    <strong>PSU:</strong>
+                    <span>SilverStone DA650W Modular</span>
+                </li>
+                <li>
+                    <strong>Cooling:</strong>
+                    <span>EKWB Basic 240MM AIO</span>
+                </li>
+                <li>
+                    <strong>Case:</strong>
+                    <span>Phanteks G500a</span>
+                </li>
             </ul>
 
-
+            <h2 style="margin-top: 3rem;">Peripherals & Setup</h2>
             <ul class="specs-list">
-                <li><strong>Main Monitor:</strong> ViewSonic VS18277 1440P 144HZ</li>
-                <li><strong>Keyboard:</strong> Wevika D75 - Gateron Smoothies (Custom Build)</li>
-                <li><strong>Mouse:</strong> ATK MAD R & Mchose L7 Ultra 8K</li>
-                <li><strong>Headset:</strong> Sennheiser PXC 550II</li>
-                <li><strong>Speakers:</strong> Edifer MR4</li>
+                <li>
+                    <strong>Main Monitor:</strong>
+                    <span>ViewSonic VS18277 1440P 144HZ</span>
+                </li>
+                <li>
+                    <strong>Keyboard:</strong>
+                    <span>Wevika D75 - Gateron Smoothies (Custom Build)</span>
+                </li>
+                <li>
+                    <strong>Mouse:</strong>
+                    <span>ATK MAD R & Mchose L7 Ultra 8K</span>
+                </li>
+                <li>
+                    <strong>Headset:</strong>
+                    <span>Sennheiser PXC 550II</span>
+                </li>
+                <li>
+                    <strong>Speakers:</strong>
+                    <span>Edifier MR4</span>
+                </li>
             </ul>
         </div>
 
-        <a href="index.html" class="back-button">Back to Home</a>
-
+        <a href="index.html" class="back-button">
+            <span style="margin-right: 8px;">🏠</span> Back to Home
+        </a>
     </div>
 
     <script>
-        // Custom cursor
-        const cursor = document.querySelector('.custom-cursor');
+        // Performance optimizations based on device type and user preferences
+        const isMobileDevice = /Mobi|Android/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 0 && !/iPad|iPhone/.test(navigator.userAgent));
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
+        // Optimized particle counts - drastically reduced for everyone, even more so for mobile/reduced motion
+        const baseParticleCount = 40;
+        const baseHeartCount = 15;
+        const baseIconCount = 20;
+        const basePawCount = 15;
 
-        // Create floating particles
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 60;
+        // Adjust density: 1 for desktop, 0.2 for mobile (further reduced), 0 for reduced motion
+        const densityFactor = prefersReducedMotion ? 0 : (isMobileDevice ? 0.2 : 1);
 
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 15 + 's';
-                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-                particlesContainer.appendChild(particle);
+        const particleCount = Math.floor(baseParticleCount * densityFactor);
+        const heartCount = Math.floor(baseHeartCount * densityFactor);
+        const iconCount = Math.floor(baseIconCount * densityFactor);
+        const pawCount = Math.floor(basePawCount * densityFactor);
+
+
+        window.addEventListener('DOMContentLoaded', function() {
+            // Conditionally create animated elements based on prefers-reduced-motion
+            if (!prefersReducedMotion) {
+                createParticles();
+                createFloatingIcons();
+                createPawPrints();
+
+                // Mouse/Touch movement effects
+                document.addEventListener('mousemove', (e) => {
+                    document.body.style.setProperty('--mouse-x', `${e.clientX / window.innerWidth * 100}%`);
+                    document.body.style.setProperty('--mouse-y', `${e.clientY / window.innerHeight * 100}%`);
+                    if (Math.random() < 0.2) createGlitter(e); // Further control glitter density
+                });
+
+                document.addEventListener('touchmove', (e) => {
+                    if (!e.touches[0]) return;
+                    document.body.style.setProperty('--mouse-x', `${e.touches[0].clientX / window.innerWidth * 100}%`);
+                    document.body.style.setProperty('--mouse-y', `${e.touches[0].clientY / window.innerHeight * 100}%`);
+                    if (Math.random() < 0.2) createGlitter(e.touches[0]);
+                });
+
+                document.addEventListener('click', createClickSparkles);
+
+                // Back button hover effects (no cursor interaction needed now)
+                const backButton = document.querySelector('.back-button');
+                if (backButton) {
+                    backButton.addEventListener('mouseenter', () => {
+                        // No specific cursor transformation, just button style changes
+                    });
+                    backButton.addEventListener('mouseleave', () => {
+                        // No specific cursor transformation
+                    });
+                }
+
+            } else {
+                // If reduced motion is preferred, remove the containers from the DOM entirely
+                document.getElementById('particles')?.remove();
+                document.getElementById('floatingIcons')?.remove();
+                document.getElementById('pawPrints')?.remove();
             }
 
-            // Add heart particles
-            for (let i = 0; i < 20; i++) {
-                const heart = document.createElement('div');
-                heart.className = 'heart-particle';
-                heart.innerHTML = '💖';
-                heart.style.left = Math.random() * 100 + '%';
-                heart.style.animationDelay = Math.random() * 12 + 's';
-                heart.style.animationDuration = (Math.random() * 8 + 12) + 's';
-                particlesContainer.appendChild(heart);
+            function createParticles() {
+                const particlesContainer = document.getElementById('particles');
+                if (!particlesContainer) return;
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.animationDelay = Math.random() * 20 + 's';
+                    particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                    particlesContainer.appendChild(particle);
+                }
+                for (let i = 0; i < heartCount; i++) {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart-particle';
+                    heart.innerHTML = ['💕', '💖', '💗', '💝', '💘'][Math.floor(Math.random() * 5)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDelay = Math.random() * 16 + 's';
+                    heart.style.animationDuration = (Math.random() * 8 + 12) + 's';
+                    particlesContainer.appendChild(heart);
+                }
             }
-        }
 
-        // Create floating icons
-        function createFloatingIcons() {
-            const iconsContainer = document.getElementById('floatingIcons');
-            const icons = ['💻', '💾', '⚙️', '✨', '🌟', '🚀', '💡', '🎮', '🖥️', '🖱️', '⌨️', '🎧', '⚡', '🌈', '🔮'];
-
-            for (let i = 0; i < 30; i++) {
-                const icon = document.createElement('div');
-                icon.className = 'floating-icon';
-                icon.innerHTML = icons[Math.floor(Math.random() * icons.length)];
-                icon.style.left = Math.random() * 100 + '%';
-                icon.style.animationDelay = Math.random() * 15 + 's';
-                icon.style.animationDuration = (Math.random() * 10 + 15) + 's';
-                iconsContainer.appendChild(icon);
+            function createFloatingIcons() {
+                const iconsContainer = document.getElementById('floatingIcons');
+                if (!iconsContainer) return;
+                const icons = ['💻', '💾', '⚙️', '✨', '🌟', '🚀', '💡', '🎮', '🖥️', '🖱️', '⌨️', '🎧', '⚡', '🌈', '🔮', '🤖', '🔋', '📡'];
+                for (let i = 0; i < iconCount; i++) {
+                    const icon = document.createElement('div');
+                    icon.className = 'floating-icon';
+                    icon.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+                    icon.style.left = Math.random() * 100 + '%';
+                    icon.style.animationDelay = Math.random() * 18 + 's';
+                    icon.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                    iconsContainer.appendChild(icon);
+                }
             }
-        }
 
-        // Create floating paw prints
-        function createPawPrints() {
-            const pawContainer = document.getElementById('pawPrints');
-            const pawCount = 25;
-
-            for (let i = 0; i < pawCount; i++) {
-                const paw = document.createElement('div');
-                paw.className = 'paw';
-                paw.innerHTML = '🐾';
-                paw.style.left = Math.random() * 100 + '%';
-                paw.style.animationDelay = Math.random() * 20 + 's';
-                paw.style.animationDuration = (Math.random() * 15 + 15) + 's';
-                pawContainer.appendChild(paw);
+            function createPawPrints() {
+                const pawContainer = document.getElementById('pawPrints');
+                if (!pawContainer) return;
+                for (let i = 0; i < pawCount; i++) {
+                    const paw = document.createElement('div');
+                    paw.className = 'paw';
+                    paw.innerHTML = '🐾';
+                    paw.style.left = Math.random() * 100 + '%';
+                    paw.style.animationDelay = Math.random() * 25 + 's';
+                    paw.style.animationDuration = (Math.random() * 15 + 20) + 's';
+                    pawContainer.appendChild(paw);
+                }
             }
-        }
 
-        // Enhanced mouse trail effect
-        document.addEventListener('mousemove', (e) => {
-            const trail = document.createElement('div');
-            trail.style.position = 'fixed';
-            trail.style.left = e.clientX + 'px';
-            trail.style.top = e.clientY + 'px';
-            trail.style.width = '8px';
-            trail.style.height = '8px';
-            trail.style.background = 'radial-gradient(circle, #ff69b4, #ff1493)';
-            trail.style.borderRadius = '50%';
-            trail.style.pointerEvents = 'none';
-            trail.style.zIndex = '1000';
-            trail.style.animation = 'fadeOut 1.5s ease-out forwards';
-            trail.style.boxShadow = '0 0 10px rgba(255, 105, 180, 0.6)';
-
-            document.body.appendChild(trail);
-
-            setTimeout(() => {
-                trail.remove();
-            }, 1500);
-        });
-
-        // Create sparkles on click
-        document.addEventListener('click', (e) => {
-            for (let i = 0; i < 8; i++) {
-                const sparkle = document.createElement('div');
-                sparkle.className = 'sparkle';
-                sparkle.style.left = (e.clientX + Math.random() * 60 - 30) + 'px';
-                sparkle.style.top = (e.clientY + Math.random() * 60 - 30) + 'px';
-                sparkle.style.animationDelay = Math.random() * 0.5 + 's';
-                document.body.appendChild(sparkle);
-
-                setTimeout(() => {
-                    sparkle.remove();
-                }, 2000);
+            // Glitter trail logic
+            function createGlitter(e) {
+                const glitter = document.createElement('div');
+                glitter.className = 'glitter-sparkle';
+                glitter.style.left = (e.clientX + (Math.random() - 0.5) * 10) + 'px';
+                glitter.style.top = (e.clientY + (Math.random() - 0.5) * 10) + 'px';
+                document.body.appendChild(glitter);
+                glitter.addEventListener('animationend', () => glitter.remove());
             }
-        });
 
+            // Create sparkles on click
+            function createClickSparkles(e) {
+                for (let i = 0; i < 3; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'click-sparkle';
+                    const offsetX = (Math.random() - 0.5) * 60;
+                    const offsetY = (Math.random() - 0.5) * 60;
+                    sparkle.style.left = (e.clientX + offsetX) + 'px';
+                    sparkle.style.top = (e.clientY + offsetY) + 'px';
+                    sparkle.style.animationDelay = (Math.random() * 0.1) + 's';
+                    document.body.appendChild(sparkle);
 
-        // Initialize effects
-        createParticles();
-        createFloatingIcons();
-        createPawPrints();
-
-        // Add hover effect for back button
-        document.querySelector('.back-button').addEventListener('mouseenter', () => {
-            cursor.style.transform = 'scale(1.5)';
-        });
-
-        document.querySelector('.back-button').addEventListener('mouseleave', () => {
-            cursor.style.transform = 'scale(1)';
+                    sparkle.addEventListener('animationend', () => sparkle.remove());
+                }
+            }
         });
     </script>
 </body>
