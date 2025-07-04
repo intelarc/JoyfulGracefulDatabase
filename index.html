@@ -620,11 +620,10 @@
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         // Optimized particle counts - significantly reduced for mobile
-        // Further reducing base counts for better mobile performance, even with density factor
-        const particleCount = prefersReducedMotion ? 0 : (isMobileDevice ? 8 : 40); // Was 15/70
-        const heartCount = prefersReducedMotion ? 0 : (isMobileDevice ? 3 : 15);   // Was 5/25
-        const iconCount = prefersReducedMotion ? 0 : (isMobileDevice ? 5 : 20);    // Was 8/35
-        const pawCount = prefersReducedMotion ? 0 : (isMobileDevice ? 4 : 15);     // Was 7/30
+        const particleCount = prefersReducedMotion ? 0 : (isMobileDevice ? 5 : 20); // Further reduced
+        const heartCount = prefersReducedMotion ? 0 : (isMobileDevice ? 2 : 10);    // Further reduced
+        const iconCount = prefersReducedMotion ? 0 : (isMobileDevice ? 3 : 15);     // Further reduced
+        const pawCount = prefersReducedMotion ? 0 : (isMobileDevice ? 2 : 10);      // Further reduced
 
 
         window.addEventListener('DOMContentLoaded', function() {
@@ -759,7 +758,7 @@
                         console.error("Error playing music:", error);
                         uniMeowMessage.textContent = "Autoplay blocked! Tap again?";
                         uniMeowMessage.style.opacity = 1;
-                        setTimeout(() => { uniMeowMessage.style.opacity = 3000);
+                        setTimeout(() => { uniMeowMessage.style.opacity = 0; }, 3000);
                     });
                 } else {
                     backgroundMusic.pause();
