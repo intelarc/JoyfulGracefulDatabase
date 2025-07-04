@@ -67,7 +67,7 @@
         }
 
         /* Elements with animations/transitions should have will-change */
-        .title, .subtitle, .specs-section, .back-button, .pc-image-container {
+        .title, .subtitle, .specs-section, .back-button {
             will-change: transform, opacity, filter, background-position, box-shadow, text-shadow;
         }
 
@@ -134,7 +134,7 @@
             backdrop-filter: blur(20px);
             border-radius: 30px;
             padding: 3rem;
-            max-width: 900px; /* Same max-width as pc-image-container */
+            max-width: 900px;
             width: 90%;
             border: 2px solid rgba(160, 32, 240, 0.6);
             box-shadow: 0 0 60px rgba(160, 32, 240, 0.6),
@@ -220,91 +220,6 @@
             color: #e0b0ff;
             opacity: 0.9;
         }
-
-        /* New PC Image Section */
-        .pc-image-container {
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(15px);
-            border-radius: 30px;
-            padding: 2.5rem; /* Slightly reduced padding to better align with specs-section visually */
-            max-width: 900px; /* Same max-width as specs-section */
-            width: 90%;
-            border: 2px solid rgba(255, 105, 180, 0.6); /* Pink border */
-            box-shadow: 0 0 50px rgba(255, 105, 180, 0.6),
-                        0 0 100px rgba(255, 105, 180, 0.3);
-            text-align: center;
-            position: relative;
-            z-index: 10;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .pc-image-container:hover {
-            transform: translateY(-15px) scale(1.02);
-            box-shadow: 0 0 80px rgba(255, 105, 180, 0.8),
-                        0 0 120px rgba(255, 105, 180, 0.5);
-        }
-
-        .pc-image-container h2 {
-            font-size: clamp(1.8rem, 5vw, 2.5rem);
-            color: #ffb6c1; /* Light pink for this heading */
-            margin-bottom: 1.5rem;
-            text-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
-            font-weight: 700;
-            background: linear-gradient(45deg, #ffb6c1, #e0b0ff, #ffb6c1);
-            background-size: 400% 400%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: textGradient 3s ease infinite;
-        }
-
-        .pc-image-wrapper {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-            border-radius: 15px;
-            overflow: hidden;
-            background-color: rgba(0, 0, 0, 0.5); /* Dark placeholder */
-            display: flex; /* Use flexbox for centering placeholder text */
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: rgba(255, 255, 255, 0.6);
-            border: 2px dashed rgba(255, 105, 180, 0.4);
-            transition: all 0.3s ease;
-        }
-        .pc-image-wrapper:hover {
-            border-color: rgba(255, 105, 180, 0.8);
-            box-shadow: 0 0 25px rgba(255, 105, 180, 0.7);
-        }
-
-        .pc-image-wrapper img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* This is key for maintaining aspect ratio and filling the space */
-            display: block;
-            border-radius: 13px; /* Slightly smaller than wrapper border-radius */
-            transition: transform 0.3s ease;
-        }
-        .pc-image-wrapper img:hover {
-            transform: scale(1.03);
-        }
-
-        /* Fallback text for image when no src is provided */
-        .pc-image-wrapper:not(:has(img[src]:not([src=""])))::after {
-             content: "Your PC Image Here"; /* Show only if image src is empty or not present */
-             position: absolute;
-             top: 50%;
-             left: 50%;
-             transform: translate(-50%, -50%);
-             color: rgba(255, 255, 255, 0.5);
-             font-size: 1.2em;
-             pointer-events: none;
-        }
-
 
         .back-button {
             display: inline-flex;
@@ -483,7 +398,7 @@
             body::before { /* Remove interactive background gradient */
                 background: none;
             }
-            .title, .subtitle, .specs-section, .back-button, .pc-image-container {
+            .title, .subtitle, .specs-section, .back-button {
                 animation: none !important;
                 transition: none !important;
                 filter: none !important;
@@ -495,7 +410,6 @@
                 display: none; /* Hide interactive sparkles */
             }
             .specs-section:hover, .specs-section:active,
-            .pc-image-container:hover, .pc-image-container:active,
             .back-button:hover, .back-button:active {
                 transform: none !important; /* Disable transforms on hover/active */
                 box-shadow: none !important; /* Disable complex shadows */
@@ -535,7 +449,7 @@
                 padding: 15px;
                 gap: 1.5rem;
             }
-            .specs-section, .pc-image-container {
+            .specs-section {
                 padding: 2rem;
                 width: 95%; /* Slightly larger width for better mobile fill */
             }
@@ -565,14 +479,21 @@
                 padding: 10px;
                 gap: 1rem;
             }
-            .specs-section, .pc-image-container {
+            .specs-section {
                 padding: 1.5rem;
+                width: 98%; /* Even wider for very small screens */
             }
-            .specs-section h2, .pc-image-container h2 {
+            .specs-section h2 {
                 font-size: 1.6rem;
             }
             .specs-section p {
                 font-size: 0.9rem;
+            }
+            .specs-list li strong {
+                font-size: 1em; /* Adjust label size */
+            }
+            .specs-list li span {
+                font-size: 0.95em; /* Adjust value size */
             }
             .back-button {
                 font-size: 0.9rem;
@@ -592,14 +513,6 @@
         <h1 class="title">My PC Specs ⚙️</h1>
 
         <p class="subtitle">Dive into the tech that powers my world!</p>
-
-        <div class="pc-image-container">
-            <h2>My Rig</h2>
-            <div class="pc-image-wrapper">
-                <img src="computer.png" alt="My Custom PC Build">
-            </div>
-            <p style="margin-top: 1.5rem; font-style: italic; opacity: 0.8;">💜</p>
-        </div>
 
         <div class="specs-section">
             <h2>Core Components</h2>
@@ -678,13 +591,14 @@
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         // Optimized particle counts - drastically reduced for everyone, even more so for mobile/reduced motion
-        const baseParticleCount = 40;
-        const baseHeartCount = 15;
-        const baseIconCount = 20;
-        const basePawCount = 15;
+        // Further reducing base counts for better mobile performance, even with density factor
+        const baseParticleCount = 25; // Was 40
+        const baseHeartCount = 10;   // Was 15
+        const baseIconCount = 15;    // Was 20
+        const basePawCount = 10;     // Was 15
 
-        // Adjust density: 1 for desktop, 0.2 for mobile (further reduced), 0 for reduced motion
-        const densityFactor = prefersReducedMotion ? 0 : (isMobileDevice ? 0.2 : 1);
+        // Adjust density: 1 for desktop, 0.1 for mobile (further reduced), 0 for reduced motion
+        const densityFactor = prefersReducedMotion ? 0 : (isMobileDevice ? 0.1 : 1);
 
         const particleCount = Math.floor(baseParticleCount * densityFactor);
         const heartCount = Math.floor(baseHeartCount * densityFactor);
@@ -703,14 +617,15 @@
                 document.addEventListener('mousemove', (e) => {
                     document.body.style.setProperty('--mouse-x', `${e.clientX / window.innerWidth * 100}%`);
                     document.body.style.setProperty('--mouse-y', `${e.clientY / window.innerHeight * 100}%`);
-                    if (Math.random() < 0.2) createGlitter(e); // Further control glitter density
+                    // Even lower probability for glitter on mobile/if densityFactor is low
+                    if (Math.random() < (isMobileDevice ? 0.05 : 0.2)) createGlitter(e);
                 });
 
                 document.addEventListener('touchmove', (e) => {
                     if (!e.touches[0]) return;
                     document.body.style.setProperty('--mouse-x', `${e.touches[0].clientX / window.innerWidth * 100}%`);
                     document.body.style.setProperty('--mouse-y', `${e.touches[0].clientY / window.innerHeight * 100}%`);
-                    if (Math.random() < 0.2) createGlitter(e.touches[0]);
+                    if (Math.random() < 0.05) createGlitter(e.touches[0]); // Lower probability for touch
                 });
 
                 document.addEventListener('click', createClickSparkles);
@@ -796,11 +711,11 @@
 
             // Create sparkles on click
             function createClickSparkles(e) {
-                for (let i = 0; i < 3; i++) {
+                for (let i = 0; i < (isMobileDevice ? 1 : 3); i++) { // Fewer sparkles on mobile
                     const sparkle = document.createElement('div');
                     sparkle.className = 'click-sparkle';
-                    const offsetX = (Math.random() - 0.5) * 60;
-                    const offsetY = (Math.random() - 0.5) * 60;
+                    const offsetX = (Math.random() - 0.5) * (isMobileDevice ? 30 : 60); // Smaller spread on mobile
+                    const offsetY = (Math.random() - 0.5) * (isMobileDevice ? 30 : 60);
                     sparkle.style.left = (e.clientX + offsetX) + 'px';
                     sparkle.style.top = (e.clientY + offsetY) + 'px';
                     sparkle.style.animationDelay = (Math.random() * 0.1) + 's';
