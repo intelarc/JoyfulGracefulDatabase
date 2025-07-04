@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* Base styles for all devices */
         * {
             margin: 0;
             padding: 0;
@@ -25,6 +26,8 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             position: relative;
+            /* Performance optimization for background */
+            will-change: background-position;
         }
         body::before {
             content: '';
@@ -38,6 +41,8 @@
                         radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
             pointer-events: none;
             z-index: 1;
+            /* Performance optimization for overlay */
+            will-change: transform;
         }
         @keyframes backgroundShift {
             0%, 100% { background-position: 0% 50%; }
@@ -54,53 +59,12 @@
             position: relative;
             z-index: 2;
         }
-        .floating-particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 1;
+
+        /* Elements with animations/transitions should have will-change */
+        .title, .subtitle, .cat-frame, .feature {
+            will-change: transform, opacity, filter, background-position, box-shadow, text-shadow;
         }
-        .particle {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: radial-gradient(circle, rgba(173, 216, 230, 0.8), rgba(173, 216, 230, 0.2));
-            border-radius: 50%;
-            animation: float 20s infinite linear;
-            box-shadow: 0 0 12px rgba(173, 216, 230, 0.4);
-        }
-        .heart-particle {
-            position: absolute;
-            font-size: 18px;
-            color: rgba(255, 105, 180, 0.8);
-            animation: heartFloat 16s infinite linear;
-            text-shadow: 0 0 8px rgba(255, 105, 180, 0.6);
-        }
-        @keyframes float {
-            0% {
-                transform: translateY(100vh) rotate(0deg) scale(0.5);
-                opacity: 0;
-            }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% {
-                transform: translateY(-100vh) rotate(360deg) scale(1.2);
-                opacity: 0;
-            }
-        }
-        @keyframes heartFloat {
-            0% {
-                transform: translateY(100vh) rotate(0deg) scale(0.3);
-                opacity: 0;
-            }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% {
-                transform: translateY(-100vh) rotate(360deg) scale(1.5);
-                opacity: 0;
-            }
-        }
+
         .title {
             font-size: clamp(2.5rem, 10vw, 5rem);
             color: #f0e68c;
@@ -165,6 +129,7 @@
             background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.2), transparent, rgba(255, 255, 255, 0.1), transparent);
             animation: shine 4s linear infinite;
             pointer-events: none;
+            will-change: transform; /* Add will-change */
         }
         .cat-frame::after {
             content: '';
@@ -176,6 +141,7 @@
             border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), transparent 70%);
             pointer-events: none;
+            will-change: opacity; /* Add will-change */
         }
         @keyframes shine {
             0% { transform: rotate(0deg); }
@@ -250,6 +216,7 @@
             padding: 10px 20px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(224, 176, 255, 0.3);
+            will-change: opacity; /* Add will-change */
         }
         #surprise-text {
             color: #add8e6;
@@ -315,6 +282,7 @@
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
             transition: left 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            will-change: left; /* Add will-change */
         }
         .feature::after {
             content: '';
@@ -326,6 +294,7 @@
             background: radial-gradient(circle at center, rgba(160, 32, 240, 0.1) 0%, transparent 70%);
             opacity: 0;
             transition: opacity 0.4s ease;
+            will-change: opacity; /* Add will-change */
         }
         .feature:hover::before {
             left: 100%;
@@ -363,42 +332,17 @@
             font-weight: 500;
             line-height: 1.4;
         }
-        .paw-prints {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2;
-        }
-        .paw {
-            position: absolute;
-            width: 28px;
-            height: 28px;
-            opacity: 0.12;
-            animation: pawFloat 25s infinite linear;
-            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
-        }
-        @keyframes pawFloat {
-            0% {
-                transform: translate(0, 100vh) rotate(0deg) scale(0.5);
-            }
-            50% {
-                transform: translate(30px, 50vh) rotate(180deg) scale(1);
-            }
-            100% {
-                transform: translate(60px, -100vh) rotate(360deg) scale(0.8);
-            }
-        }
         .sparkle {
             position: absolute;
             width: 6px;
             height: 6px;
             background: radial-gradient(circle, #ff69b4, #a020f0);
             border-radius: 50%;
-            animation: sparkleAnim 0.5s forwards; /* Changed to forwards to stop at end */
+            animation: sparkleAnim 0.5s forwards;
             box-shadow: 0 0 10px rgba(255, 105, 180, 0.8);
-            pointer-events: none; /* Crucial for cursor trail */
+            pointer-events: none;
             z-index: 9999;
+            will-change: transform, opacity; /* Add will-change */
         }
         @keyframes sparkleAnim {
             0% {
@@ -410,34 +354,81 @@
                 transform: scale(0.2) rotate(180deg);
             }
         }
-        .floating-icons {
+
+        /* Elements for floating particles/icons/paws */
+        .floating-particles,
+        .floating-icons,
+        .paw-prints {
             position: absolute;
             width: 100%;
             height: 100%;
             overflow: hidden;
             z-index: 1;
+            /* Crucial for performance with many animated elements */
+            contain: strict; /* This helps limit browser work to the element's bounds */
+            pointer-events: none; /* Ensure they don't block interaction */
+        }
+
+        .particle, .heart-particle, .floating-icon, .paw {
+            position: absolute;
+            opacity: 0; /* Start hidden, reveal with animation */
+            will-change: transform, opacity; /* Optimize these animations */
+        }
+
+        .particle {
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, rgba(173, 216, 230, 0.8), rgba(173, 216, 230, 0.2));
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+            box-shadow: 0 0 12px rgba(173, 216, 230, 0.4);
+        }
+        .heart-particle {
+            font-size: 18px;
+            color: rgba(255, 105, 180, 0.8);
+            animation: heartFloat 16s infinite linear;
+            text-shadow: 0 0 8px rgba(255, 105, 180, 0.6);
         }
         .floating-icon {
-            position: absolute;
             font-size: 24px;
             opacity: 0.18;
             animation: iconFloat 18s infinite linear;
             filter: drop-shadow(0 0 12px rgba(173, 216, 230, 0.4));
             text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
         }
+        .paw {
+            width: 28px;
+            height: 28px;
+            opacity: 0.12;
+            animation: pawFloat 25s infinite linear;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg) scale(0.5); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg) scale(1.2); opacity: 0; }
+        }
+        @keyframes heartFloat {
+            0% { transform: translateY(100vh) rotate(0deg) scale(0.3); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg) scale(1.5); opacity: 0; }
+        }
         @keyframes iconFloat {
-            0% {
-                transform: translateY(100vh) rotate(0deg) scale(0.5);
-                opacity: 0;
-            }
+            0% { transform: translateY(100vh) rotate(0deg) scale(0.5); opacity: 0; }
             10% { opacity: 0.18; }
             90% { opacity: 0.18; }
-            100% {
-                transform: translateY(-100vh) rotate(360deg) scale(1.3);
-                opacity: 0;
-            }
+            100% { transform: translateY(-100vh) rotate(360deg) scale(1.3); opacity: 0; }
         }
-        /* Enhanced mobile optimizations */
+        @keyframes pawFloat {
+            0% { transform: translate(0, 100vh) rotate(0deg) scale(0.5); opacity: 0.12; } /* Keep opacity for visibility */
+            50% { transform: translate(30px, 50vh) rotate(180deg) scale(1); }
+            100% { transform: translate(60px, -100vh) rotate(360deg) scale(0.8); opacity: 0.12; } /* Keep opacity for visibility */
+        }
+
+        /* Responsive adjustments */
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
@@ -453,6 +444,7 @@
                 height: 140px;
                 padding: 1.5rem;
             }
+            /* Reduce particle sizes and counts if needed, but JavaScript handles counts now */
             .particle {
                 width: 6px;
                 height: 6px;
@@ -487,103 +479,19 @@
                 margin-bottom: 1.5rem;
             }
         }
-        /* Large screen enhancements */
-        @media (min-width: 1200px) {
-            .features {
-                gap: 2.5rem;
-            }
-            .feature {
-                height: 180px;
-                padding: 2.5rem;
-            }
-            .particle {
-                width: 10px;
-                height: 10px;
-            }
-            .floating-icon {
-                font-size: 28px;
-            }
-        }
-        /* Reduced motion preferences */
+
+        /* Reduce animations for users who prefer it */
         @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.1s !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.1s !important;
+            body, .title, .subtitle, .cat-frame, .cat-frame::before, .cat-frame::after, .feature, .feature::before, .feature::after,
+            .sparkle, .particle, .heart-particle, .floating-icon, .paw, #surprise-text {
+                animation: none !important;
+                transition: none !important;
+            }
+            .floating-particles, .floating-icons, .paw-prints {
+                display: none; /* Hide animated backgrounds entirely */
             }
         }
-        /* The .message-box and related animations are no longer needed
-           if the welcome message is fully removed. You could remove this CSS too. */
-        /* .message-box {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(20px);
-            color: #fff;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8),
-                        0 0 100px rgba(160, 32, 240, 0.3);
-            z-index: 10000;
-            text-align: center;
-            font-family: 'Inter', sans-serif;
-            max-width: 90vw;
-            width: 450px;
-            border: 2px solid rgba(160, 32, 240, 0.6);
-            animation: messageBoxAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes messageBoxAppear {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-        }
-        .message-box button {
-            margin-top: 20px;
-            padding: 15px 30px;
-            background: linear-gradient(45deg, #a020f0, #8a2be2, #6a0572);
-            color: #fff;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            font-size: 16px;
-            -webkit-tap-highlight-color: transparent;
-            box-shadow: 0 4px 20px rgba(160, 32, 240, 0.4);
-        }
-        .message-box button:hover {
-            transform: scale(1.08);
-            box-shadow: 0 8px 30px rgba(160, 32, 240, 0.6);
-            background: linear-gradient(45deg, #b030f0, #9a3be2, #7a1572);
-        }
-        .message-box button:active {
-            transform: scale(0.95);
-        } */
-        /* Enhanced trail effect */
-        /* This animation is used by the sparkle class directly now */
-        /* @keyframes trailFade {
-            0% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(0.3);
-            }
-        } */
-        /* Performance optimizations */
-        .floating-particles,
-        .floating-icons,
-        .paw-prints {
-            will-change: transform;
-        }
+
         /* Scrollbar styling */
         ::-webkit-scrollbar {
             width: 8px;
@@ -613,6 +521,7 @@
         <div class="floating-particles" id="particles"></div>
         <div class="floating-icons" id="floatingIcons"></div>
         <div class="paw-prints" id="pawPrints"></div>
+
         <h1 class="title">KOHAZE ✨</h1>
         <div class="cat-container">
             <div class="cat-frame">
@@ -642,19 +551,34 @@
         <p id="surprise-text">Tap Kohaze for a surprise! 🎵</p>
     </div>
     <script>
-        // Performance optimizations
-        const isDesktop = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-        const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
-        // Optimized particle counts
-        const particleCount = isMobile ? 35 : 70;
-        const heartCount = isMobile ? 12 : 25;
-        const iconCount = isMobile ? 18 : 35;
-        const pawCount = isMobile ? 15 : 30;
+        // Performance optimizations based on device type and user preferences
+        const isMobileDevice = /Mobi|Android/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 0 && !/iPad|iPhone/.test(navigator.userAgent));
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Optimized particle counts - significantly reduced for mobile
+        const particleCount = prefersReducedMotion ? 0 : (isMobileDevice ? 15 : 70); // Even fewer particles on mobile with reduced motion
+        const heartCount = prefersReducedMotion ? 0 : (isMobileDevice ? 5 : 25);
+        const iconCount = prefersReducedMotion ? 0 : (isMobileDevice ? 8 : 35);
+        const pawCount = prefersReducedMotion ? 0 : (isMobileDevice ? 7 : 30);
 
         window.addEventListener('DOMContentLoaded', function() {
-            // Enhanced particle creation
+            // Conditionally create animated elements
+            if (!prefersReducedMotion) {
+                createParticles();
+                createFloatingIcons();
+                createPawPrints();
+                document.addEventListener('mousemove', createTrail);
+                document.addEventListener('touchmove', createTrail);
+            } else {
+                // If reduced motion is preferred, remove the containers from the DOM entirely
+                document.getElementById('particles').remove();
+                document.getElementById('floatingIcons').remove();
+                document.getElementById('pawPrints').remove();
+            }
+
             function createParticles() {
                 const particlesContainer = document.getElementById('particles');
+                if (!particlesContainer) return; // Guard against element removal
                 for (let i = 0; i < particleCount; i++) {
                     const particle = document.createElement('div');
                     particle.className = 'particle';
@@ -663,7 +587,6 @@
                     particle.style.animationDuration = (Math.random() * 15 + 15) + 's';
                     particlesContainer.appendChild(particle);
                 }
-                // Enhanced heart particles
                 for (let i = 0; i < heartCount; i++) {
                     const heart = document.createElement('div');
                     heart.className = 'heart-particle';
@@ -674,9 +597,10 @@
                     particlesContainer.appendChild(heart);
                 }
             }
-            // Enhanced floating icons
+
             function createFloatingIcons() {
                 const iconsContainer = document.getElementById('floatingIcons');
+                if (!iconsContainer) return; // Guard against element removal
                 const icons = ['🐱', '🌟', '✨', '💫', '🎀', '🌸', '💕', '🦄', '🌈', '⭐', '💖', '🎵', '🎶', '🌙', '☁️'];
                 for (let i = 0; i < iconCount; i++) {
                     const icon = document.createElement('div');
@@ -688,9 +612,10 @@
                     iconsContainer.appendChild(icon);
                 }
             }
-            // Enhanced paw prints
+
             function createPawPrints() {
                 const pawContainer = document.getElementById('pawPrints');
+                if (!pawContainer) return; // Guard against element removal
                 for (let i = 0; i < pawCount; i++) {
                     const paw = document.createElement('div');
                     paw.className = 'paw';
@@ -702,8 +627,10 @@
                 }
             }
 
-            // Enhanced trail effect (no custom cursor)
             function createTrail(e) {
+                // Only create trail on mousemove for desktop, and on touchmove for mobile if not reduced motion
+                if (prefersReducedMotion) return; // Do not create trail if reduced motion is preferred
+
                 const trail = document.createElement('div');
                 const x = e.clientX || (e.touches && e.touches[0].clientX);
                 const y = e.clientY || (e.touches && e.touches[0].clientY);
@@ -717,63 +644,42 @@
 
                 setTimeout(() => {
                     trail.remove();
-                }, 500); // Remove after 500ms, matching sparkleAnim duration
+                }, 500);
             }
-
-            // Initial setup calls
-            createParticles();
-            createFloatingIcons();
-            createPawPrints();
-
-            // Event listeners for trail effect
-            document.addEventListener('mousemove', createTrail);
-            document.addEventListener('touchmove', createTrail);
 
             const kohazePicture = document.getElementById('kohaze-picture');
             const backgroundMusic = document.getElementById('background-music');
             const uniMeowMessage = document.getElementById('uni-meow-message');
+            let isPlaying = false;
 
-            let isPlaying = false; // Track if music is playing
-
-            // Music play/pause functionality
             kohazePicture.addEventListener('click', function() {
                 if (backgroundMusic.paused) {
                     backgroundMusic.play().then(() => {
                         isPlaying = true;
                         uniMeowMessage.textContent = "Meow! Music ON! 🎶";
                         uniMeowMessage.style.opacity = 1;
-                        setTimeout(() => {
-                            uniMeowMessage.style.opacity = 0;
-                        }, 3000); // Hide message after 3 seconds
+                        setTimeout(() => { uniMeowMessage.style.opacity = 0; }, 3000);
                     }).catch(error => {
                         console.error("Error playing music:", error);
                         uniMeowMessage.textContent = "Autoplay blocked! Tap again?";
                         uniMeowMessage.style.opacity = 1;
-                        setTimeout(() => {
-                            uniMeowMessage.style.opacity = 0;
-                        }, 3000);
+                        setTimeout(() => { uniMeowMessage.style.opacity = 0; }, 3000);
                     });
                 } else {
                     backgroundMusic.pause();
                     isPlaying = false;
                     uniMeowMessage.textContent = "Zzz... Music OFF.";
                     uniMeowMessage.style.opacity = 1;
-                    setTimeout(() => {
-                        uniMeowMessage.style.opacity = 0;
-                    }, 3000);
+                    setTimeout(() => { uniMeowMessage.style.opacity = 0; }, 3000);
                 }
             });
 
-            // Optional: Show message on initial load if music isn't playing
             if (backgroundMusic.paused) {
                 uniMeowMessage.textContent = "Tap Kohaze to hear Uni meow! 🐾";
                 uniMeowMessage.style.opacity = 1;
-                setTimeout(() => {
-                    uniMeowMessage.style.opacity = 0;
-                }, 3000);
+                setTimeout(() => { uniMeowMessage.style.opacity = 0; }, 3000);
             }
 
-            // Add a simple 'surprise' logic for the surprise text
             const surpriseText = document.getElementById('surprise-text');
             let surpriseClickCount = 0;
             const surpriseMessages = [
@@ -786,10 +692,8 @@
             ];
 
             kohazePicture.addEventListener('click', function() {
-                // Original music toggle logic runs first
-                // Then, update surprise text
                 surpriseClickCount++;
-                if (surpriseClickCount > 1) { // Only show after the first tap (which might be for music)
+                if (surpriseClickCount > 1) {
                     const randomMessage = surpriseMessages[Math.floor(Math.random() * surpriseMessages.length)];
                     surpriseText.textContent = randomMessage;
                 }
