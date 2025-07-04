@@ -15,6 +15,7 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #0a0015 0%, #1a0533 25%, #2d0a4f 50%, #0f0329 75%, #4a1866 100%);
@@ -26,9 +27,10 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             position: relative;
-            /* Performance optimization for background */
-            will-change: background-position;
+            will-change: background-position; /* Keep for background animation */
         }
+
+        /* Simplified and optimized overlay */
         body::before {
             content: '';
             position: fixed;
@@ -36,19 +38,29 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
-                                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
-                                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+            /* Simpler gradient to reduce render cost */
+            background: linear-gradient(
+                to bottom right,
+                rgba(120, 119, 198, 0.08) 0%,
+                transparent 30%
+            ),
+            linear-gradient(
+                to top left,
+                rgba(255, 119, 198, 0.08) 0%,
+                transparent 30%
+            );
             pointer-events: none;
             z-index: 1;
-            /* Performance optimization for overlay */
-            will-change: transform;
+            /* No need for transition here, will-change helps for the gradients themselves */
+            will-change: background; 
         }
+
         @keyframes backgroundShift {
             0%, 100% { background-position: 0% 50%; }
             33% { background-position: 100% 50%; }
             66% { background-position: 50% 100%; }
         }
+
         .container {
             min-height: 100vh;
             display: flex;
@@ -61,12 +73,18 @@
         }
 
         /* Elements with animations/transitions should have will-change */
-        .title, .subtitle, .cat-frame, .feature {
-            will-change: transform, opacity, filter, background-position, box-shadow, text-shadow;
+        .cat-frame, .feature, .sparkle {
+            will-change: transform, opacity, filter, box-shadow;
         }
 
+        /* Removing will-change from text elements, as their animations are less taxing on layout/paint */
+        .title, .subtitle, #surprise-text, #uni-meow-message {
+             /* will-change handled by specific animation properties if needed */
+        }
+
+
         .title {
-            font-size: clamp(2.5rem, 10vw, 5rem);
+            font-size: clamp(2.2rem, 10vw, 5rem); /* Slightly smaller clamp start */
             color: #f0e68c;
             text-align: center;
             margin-bottom: 2rem;
@@ -97,22 +115,24 @@
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
         }
+
         .cat-container {
             position: relative;
             z-index: 10;
             margin-bottom: 2rem;
         }
+
         .cat-frame {
-            width: clamp(280px, 65vw, 450px);
-            height: clamp(280px, 65vw, 450px);
+            width: clamp(250px, 65vw, 450px); /* Adjusted clamp min for smaller phones */
+            height: clamp(250px, 65vw, 450px); /* Adjusted clamp min for smaller phones */
             border-radius: 50%;
             background: linear-gradient(45deg, #6a0572, #8a2be2, #a020f0, #da70d6, #6a0572);
-            background-size: 600% 600%;
+            background-size: 400% 400%; /* Reduced background size for less work */
             animation: gradientShift 5s ease infinite;
             padding: 12px;
-            box-shadow: 0 0 60px rgba(160, 32, 240, 0.6),
-                                0 0 120px rgba(160, 32, 240, 0.3),
-                                inset 0 0 40px rgba(255, 255, 255, 0.1);
+            /* Simplified box-shadow */
+            box-shadow: 0 0 40px rgba(160, 32, 240, 0.5),
+                        0 0 80px rgba(160, 32, 240, 0.2);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
@@ -129,34 +149,35 @@
             background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.2), transparent, rgba(255, 255, 255, 0.1), transparent);
             animation: shine 4s linear infinite;
             pointer-events: none;
-            will-change: transform; /* Add will-change */
+            will-change: transform;
         }
+        /* Simplified ::after for performance */
         .cat-frame::after {
             content: '';
             position: absolute;
-            top: 10%;
-            left: 10%;
-            width: 80%;
-            height: 80%;
+            top: 5%;
+            left: 5%;
+            width: 90%;
+            height: 90%;
             border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), transparent 70%);
+            border: 2px solid rgba(255, 255, 255, 0.1); /* Simpler, less resource-intensive shine */
             pointer-events: none;
-            will-change: opacity; /* Add will-change */
+            will-change: transform, opacity;
         }
         @keyframes shine {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
         .cat-frame:hover {
-            transform: scale(1.08) rotate(3deg);
-            box-shadow: 0 0 100px rgba(160, 32, 240, 0.8),
-                                0 0 150px rgba(160, 32, 240, 0.5),
-                                0 0 200px rgba(173, 216, 230, 0.3);
+            transform: scale(1.05) rotate(2deg); /* Slightly less aggressive hover */
+            /* Simplified hover shadow */
+            box-shadow: 0 0 80px rgba(160, 32, 240, 0.7),
+                        0 0 120px rgba(160, 32, 240, 0.4);
             animation-duration: 3s;
         }
         .cat-frame:active {
             transform: scale(0.98);
-            box-shadow: 0 0 80px rgba(160, 32, 240, 0.7);
+            box-shadow: 0 0 60px rgba(160, 32, 240, 0.6);
         }
         /* Focus state for accessibility */
         .cat-frame:focus-visible {
@@ -180,13 +201,14 @@
             z-index: 2;
         }
         .cat-frame:hover .cat-image {
-            filter: brightness(1.15) saturate(1.3) contrast(1.1);
+            filter: brightness(1.1) saturate(1.2) contrast(1.05); /* Slightly less aggressive filter */
         }
+
         .subtitle {
             color: #add8e6;
-            font-size: clamp(1.2rem, 5vw, 1.8rem);
+            font-size: clamp(1.1rem, 5vw, 1.8rem); /* Adjusted clamp start */
             text-align: center;
-            margin-bottom: 0.5rem; /* Adjusted for tighter spacing with surprise-text */
+            margin-bottom: 0.5rem;
             z-index: 10;
             position: relative;
             text-shadow: 0 0 15px rgba(173, 216, 230, 0.5);
@@ -202,41 +224,33 @@
         }
         @keyframes subtitlePulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.03); } /* Slightly less aggressive pulse */
         }
-        #surprise-text { /* This will be the initially visible "Tap Kohaze..." message */
+
+        #surprise-text, #uni-meow-message {
             color: #e0b0ff;
-            font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+            font-size: clamp(1rem, 3.5vw, 1.4rem); /* Adjusted clamp start */
             text-align: center;
-            margin-top: 0.5rem; /* Space from subtitle */
+            margin-top: 0.5rem;
             margin-bottom: 2rem;
             z-index: 10;
             position: relative;
             text-shadow: 0 0 12px rgba(240, 230, 140, 0.6);
-            animation: surpriseGlow 3s ease-in-out infinite; /* Keep the glow animation */
+            animation: surpriseGlow 3s ease-in-out infinite;
             font-weight: 600;
             padding: 0 1rem;
-            will-change: opacity; /* Add will-change */
-            /* No initial background/border/blur as it's the main prompt now */
+            will-change: opacity;
         }
-        #uni-meow-message { /* This will be the temporary music status message */
-            color: #e0b0ff;
-            font-size: clamp(1.1rem, 3.5vw, 1.3rem);
-            text-align: center;
-            margin-top: -1rem; /* Adjust as needed for positioning */
-            margin-bottom: 2rem;
-            z-index: 10;
-            position: relative;
-            text-shadow: 0 0 12px rgba(240, 230, 140, 0.6);
-            font-weight: 600;
+        #uni-meow-message {
+            margin-top: -1rem;
             opacity: 0; /* Start hidden */
             transition: opacity 0.6s ease-in-out;
-            padding: 10px 20px; /* Add padding for the message box */
+            padding: 10px 20px;
             background: rgba(0, 0, 0, 0.2);
             border-radius: 20px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(224, 176, 255, 0.3);
-            will-change: opacity; /* Add will-change */
+            will-change: opacity;
         }
         @keyframes surpriseGlow {
             0%, 100% {
@@ -244,13 +258,14 @@
                 text-shadow: 0 0 12px rgba(173, 216, 230, 0.5);
             }
             50% {
-                transform: scale(1.08);
+                transform: scale(1.05); /* Slightly less aggressive pulse */
                 text-shadow: 0 0 20px rgba(173, 216, 230, 0.8), 0 0 30px rgba(255, 105, 180, 0.4);
             }
         }
+
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjusted min for mobile */
             gap: 2rem;
             margin-top: 3rem;
             justify-content: center;
@@ -279,7 +294,7 @@
             overflow: hidden;
             height: 160px;
             -webkit-tap-highlight-color: transparent;
-            box-shadow: 0 8px 32px rgba(160, 32, 240, 0.2);
+            box-shadow: 0 4px 16px rgba(160, 32, 240, 0.2); /* Reduced initial shadow */
         }
         .feature::before {
             content: '';
@@ -290,7 +305,7 @@
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
             transition: left 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            will-change: left; /* Add will-change */
+            will-change: left;
         }
         .feature::after {
             content: '';
@@ -299,10 +314,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, rgba(160, 32, 240, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle at center, rgba(160, 32, 240, 0.08) 0%, transparent 70%); /* Reduced opacity */
             opacity: 0;
             transition: opacity 0.4s ease;
-            will-change: opacity; /* Add will-change */
+            will-change: opacity;
         }
         .feature:hover::before {
             left: 100%;
@@ -311,17 +326,18 @@
             opacity: 1;
         }
         .feature:hover {
-            transform: translateY(-15px) scale(1.05);
+            transform: translateY(-10px) scale(1.02); /* Less aggressive hover */
             background: rgba(0, 0, 0, 0.5);
             border-color: rgba(160, 32, 240, 0.9);
-            box-shadow: 0 20px 50px rgba(160, 32, 240, 0.4),
-                                0 0 60px rgba(160, 32, 240, 0.3);
+            /* Simplified hover shadow */
+            box-shadow: 0 15px 40px rgba(160, 32, 240, 0.3),
+                        0 0 50px rgba(160, 32, 240, 0.2);
             text-decoration: none;
             color: #add8e6;
         }
         .feature:active {
-            transform: translateY(-10px) scale(0.98);
-            box-shadow: 0 15px 40px rgba(160, 32, 240, 0.5);
+            transform: translateY(-5px) scale(0.98); /* Less aggressive active */
+            box-shadow: 0 10px 30px rgba(160, 32, 240, 0.4);
         }
         /* Focus state for accessibility */
         .feature:focus-visible {
@@ -330,7 +346,7 @@
             box-shadow: 0 0 0 6px rgba(173, 216, 230, 0.4);
         }
         .feature h3 {
-            font-size: clamp(1.3rem, 4vw, 1.6rem);
+            font-size: clamp(1.2rem, 4vw, 1.6rem); /* Adjusted clamp start */
             margin-bottom: 0.8rem;
             font-weight: 700;
             background: linear-gradient(45deg, #e0b0ff, #add8e6);
@@ -341,22 +357,23 @@
             animation: textGradient 2s ease infinite;
         }
         .feature p {
-            font-size: clamp(1.1rem, 3.5vw, 1.2rem);
+            font-size: clamp(1rem, 3.5vw, 1.2rem); /* Adjusted clamp start */
             opacity: 0.9;
             font-weight: 500;
             line-height: 1.4;
         }
+
         .sparkle {
             position: absolute;
-            width: 6px;
-            height: 6px;
+            width: 4px; /* Reduced sparkle size */
+            height: 4px;
             background: radial-gradient(circle, #ff69b4, #a020f0);
             border-radius: 50%;
-            animation: sparkleAnim 0.5s forwards;
-            box-shadow: 0 0 10px rgba(255, 105, 180, 0.8);
+            animation: sparkleAnim 0.4s forwards; /* Shorter animation duration */
+            box-shadow: 0 0 8px rgba(255, 105, 180, 0.6); /* Reduced shadow */
             pointer-events: none;
             z-index: 9999;
-            will-change: transform, opacity; /* Add will-change */
+            will-change: transform, opacity;
         }
         @keyframes sparkleAnim {
             0% {
@@ -365,7 +382,7 @@
             }
             100% {
                 opacity: 0;
-                transform: scale(0.2) rotate(180deg);
+                transform: scale(0.1) rotate(90deg) translateY(5px); /* Smaller scale, less rotation */
             }
         }
 
@@ -378,68 +395,67 @@
             height: 100%;
             overflow: hidden;
             z-index: 1;
-            /* Crucial for performance with many animated elements */
-            contain: strict; /* This helps limit browser work to the element's bounds */
-            pointer-events: none; /* Ensure they don't block interaction */
+            contain: strict;
+            pointer-events: none;
         }
 
         .particle, .heart-particle, .floating-icon, .paw {
             position: absolute;
-            opacity: 0; /* Start hidden, reveal with animation */
-            will-change: transform, opacity; /* Optimize these animations */
+            opacity: 0;
+            will-change: transform, opacity;
         }
 
         .particle {
-            width: 8px;
-            height: 8px;
-            background: radial-gradient(circle, rgba(173, 216, 230, 0.8), rgba(173, 216, 230, 0.2));
+            width: 6px; /* Reduced size */
+            height: 6px; /* Reduced size */
+            background: radial-gradient(circle, rgba(173, 216, 230, 0.7), rgba(173, 216, 230, 0.1)); /* Reduced opacity */
             border-radius: 50%;
             animation: float 20s infinite linear;
-            box-shadow: 0 0 12px rgba(173, 216, 230, 0.4);
+            box-shadow: 0 0 10px rgba(173, 216, 230, 0.3); /* Reduced shadow */
         }
         .heart-particle {
-            font-size: 18px;
-            color: rgba(255, 105, 180, 0.8);
+            font-size: 16px; /* Reduced size */
+            color: rgba(255, 105, 180, 0.7); /* Reduced opacity */
             animation: heartFloat 16s infinite linear;
-            text-shadow: 0 0 8px rgba(255, 105, 180, 0.6);
+            text-shadow: 0 0 6px rgba(255, 105, 180, 0.5); /* Reduced shadow */
         }
         .floating-icon {
-            font-size: 24px;
-            opacity: 0.18;
+            font-size: 20px; /* Reduced size */
+            opacity: 0.15; /* Reduced opacity */
             animation: iconFloat 18s infinite linear;
-            filter: drop-shadow(0 0 12px rgba(173, 216, 230, 0.4));
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+            text-shadow: 0 0 6px rgba(255, 255, 255, 0.2); /* Replaced drop-shadow with text-shadow */
         }
         .paw {
-            width: 28px;
-            height: 28px;
-            opacity: 0.12;
+            width: 24px; /* Reduced size */
+            height: 24px; /* Reduced size */
+            opacity: 0.1; /* Reduced opacity */
             animation: pawFloat 25s infinite linear;
-            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+            filter: none; /* Removed drop-shadow entirely */
+            text-shadow: 0 0 6px rgba(255, 255, 255, 0.2); /* Added text-shadow for subtle effect */
         }
 
         @keyframes float {
             0% { transform: translateY(100vh) rotate(0deg) scale(0.5); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(360deg) scale(1.2); opacity: 0; }
+            10% { opacity: 0.8; } /* Slightly reduced peak opacity */
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-100vh) rotate(360deg) scale(1.1); opacity: 0; } /* Slightly reduced max scale */
         }
         @keyframes heartFloat {
             0% { transform: translateY(100vh) rotate(0deg) scale(0.3); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(360deg) scale(1.5); opacity: 0; }
+            10% { opacity: 0.9; } /* Slightly reduced peak opacity */
+            90% { opacity: 0.9; }
+            100% { transform: translateY(-100vh) rotate(360deg) scale(1.3); opacity: 0; } /* Slightly reduced max scale */
         }
         @keyframes iconFloat {
             0% { transform: translateY(100vh) rotate(0deg) scale(0.5); opacity: 0; }
-            10% { opacity: 0.18; }
-            90% { opacity: 0.18; }
-            100% { transform: translateY(-100vh) rotate(360deg) scale(1.3); opacity: 0; }
+            10% { opacity: 0.15; }
+            90% { opacity: 0.15; }
+            100% { transform: translateY(-100vh) rotate(360deg) scale(1.2); opacity: 0; } /* Slightly reduced max scale */
         }
         @keyframes pawFloat {
-            0% { transform: translate(0, 100vh) rotate(0deg) scale(0.5); opacity: 0.12; } /* Keep opacity for visibility */
-            50% { transform: translate(30px, 50vh) rotate(180deg) scale(1); }
-            100% { transform: translate(60px, -100vh) rotate(360deg) scale(0.8); opacity: 0.12; } /* Keep opacity for visibility */
+            0% { transform: translate(0, 100vh) rotate(0deg) scale(0.5); opacity: 0.1; }
+            50% { transform: translate(30px, 50vh) rotate(180deg) scale(0.9); } /* Reduced max scale */
+            100% { transform: translate(60px, -100vh) rotate(360deg) scale(0.7); opacity: 0.1; } /* Reduced max scale */
         }
 
         /* Responsive adjustments */
@@ -458,17 +474,20 @@
                 height: 140px;
                 padding: 1.5rem;
             }
-            /* Reduce particle sizes and counts if needed, but JavaScript handles counts now */
+            /* Further reduced particle sizes for lower-end mobile */
             .particle {
-                width: 6px;
-                height: 6px;
+                width: 4px;
+                height: 4px;
+            }
+            .heart-particle {
+                font-size: 14px;
             }
             .floating-icon {
-                font-size: 20px;
+                font-size: 16px;
             }
             .paw {
-                width: 24px;
-                height: 24px;
+                width: 20px;
+                height: 20px;
             }
             .title {
                 margin-bottom: 1.5rem;
@@ -490,7 +509,7 @@
                 margin-bottom: 1.5rem;
             }
             .subtitle {
-                margin-bottom: 1rem; /* Slightly more space on smaller screens */
+                margin-bottom: 1rem;
             }
             #uni-meow-message {
                 margin-top: -0.5rem;
@@ -500,12 +519,39 @@
         /* Reduce animations for users who prefer it */
         @media (prefers-reduced-motion: reduce) {
             body, .title, .subtitle, .cat-frame, .cat-frame::before, .cat-frame::after, .feature, .feature::before, .feature::after,
-            .sparkle, .particle, .heart-particle, .floating-icon, .paw, #surprise-text {
+            .sparkle, .particle, .heart-particle, .floating-icon, .paw, #surprise-text, #uni-meow-message {
                 animation: none !important;
                 transition: none !important;
+                filter: none !important; /* Remove all filters */
+                text-shadow: none !important; /* Remove all text-shadows */
+                box-shadow: none !important; /* Remove all box-shadows */
+            }
+            body::before { /* Remove interactive background gradient */
+                background: none !important;
             }
             .floating-particles, .floating-icons, .paw-prints {
-                display: none; /* Hide animated backgrounds entirely */
+                display: none !important; /* Hide animated backgrounds entirely */
+            }
+            /* Reset specific element styles that are normally animated */
+            .cat-frame:hover, .cat-frame:active,
+            .feature:hover, .feature:active {
+                transform: none !important;
+                background: rgba(0, 0, 0, 0.4) !important; /* Revert to initial background */
+                border-color: rgba(160, 32, 240, 0.6) !important; /* Revert to initial border */
+            }
+            .cat-image {
+                filter: none !important; /* Remove filter on hover */
+            }
+            #uni-meow-message {
+                padding: 10px 20px !important; /* Keep padding */
+                background: rgba(0, 0, 0, 0.2) !important; /* Keep background */
+                border-radius: 20px !important; /* Keep border-radius */
+                backdrop-filter: none !important; /* Remove backdrop-filter */
+                border: 1px solid rgba(224, 176, 255, 0.3) !important; /* Keep border */
+                color: #e0b0ff !important; /* Keep color */
+            }
+            #surprise-text {
+                color: #e0b0ff !important; /* Keep color */
             }
         }
 
@@ -546,7 +592,8 @@
             </div>
         </div>
         <p class="subtitle">The Most Adorable KittyKat in the Universe! 🌟</p>
-        <p id="surprise-text">Tap Kohaze for a surprise! 🎵</p> <p id="uni-meow-message">It's actually Uni meowing :3</p>
+        <p id="surprise-text">Tap Kohaze for a surprise! 🎵</p>
+        <p id="uni-meow-message">It's actually Uni meowing :3</p>
 
         <div class="features">
             <a href="https://discord.gg/p238Y2yBGC" target="_blank" class="feature">
@@ -573,10 +620,12 @@
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         // Optimized particle counts - significantly reduced for mobile
-        const particleCount = prefersReducedMotion ? 0 : (isMobileDevice ? 15 : 70); // Even fewer particles on mobile with reduced motion
-        const heartCount = prefersReducedMotion ? 0 : (isMobileDevice ? 5 : 25);
-        const iconCount = prefersReducedMotion ? 0 : (isMobileDevice ? 8 : 35);
-        const pawCount = prefersReducedMotion ? 0 : (isMobileDevice ? 7 : 30);
+        // Further reducing base counts for better mobile performance, even with density factor
+        const particleCount = prefersReducedMotion ? 0 : (isMobileDevice ? 8 : 40); // Was 15/70
+        const heartCount = prefersReducedMotion ? 0 : (isMobileDevice ? 3 : 15);   // Was 5/25
+        const iconCount = prefersReducedMotion ? 0 : (isMobileDevice ? 5 : 20);    // Was 8/35
+        const pawCount = prefersReducedMotion ? 0 : (isMobileDevice ? 4 : 15);     // Was 7/30
+
 
         window.addEventListener('DOMContentLoaded', function() {
             // Conditionally create animated elements
@@ -584,26 +633,26 @@
                 createParticles();
                 createFloatingIcons();
                 createPawPrints();
-                document.addEventListener('mousemove', debounce(createTrail, 10)); // Debounced for performance
-                document.addEventListener('touchmove', debounce(createTrail, 10));
+
+                // Mouse/Touch movement effects
+                // Debounce function for performance
+                function debounce(func, delay) {
+                    let timeout;
+                    return function(...args) {
+                        const context = this;
+                        clearTimeout(timeout);
+                        timeout = setTimeout(() => func.apply(context, args), delay);
+                    };
+                }
+
+                // Create trail on mouse/touch move, debounced for performance
+                document.addEventListener('mousemove', debounce(createSparkleTrail, 20)); // Slower debounce for less frequent sparkles
+                document.addEventListener('touchmove', debounce(createSparkleTrail, 20)); // Slower debounce for less frequent sparkles
             } else {
                 // If reduced motion is preferred, remove the containers from the DOM entirely
-                const particlesEl = document.getElementById('particles');
-                if (particlesEl) particlesEl.remove();
-                const floatingIconsEl = document.getElementById('floatingIcons');
-                if (floatingIconsEl) floatingIconsEl.remove();
-                const pawPrintsEl = document.getElementById('pawPrints');
-                if (pawPrintsEl) pawPrintsEl.remove();
-            }
-
-            // Debounce function for performance
-            function debounce(func, delay) {
-                let timeout;
-                return function(...args) {
-                    const context = this;
-                    clearTimeout(timeout);
-                    timeout = setTimeout(() => func.apply(context, args), delay);
-                };
+                document.getElementById('particles')?.remove();
+                document.getElementById('floatingIcons')?.remove();
+                document.getElementById('pawPrints')?.remove();
             }
 
             function createParticles() {
@@ -614,7 +663,7 @@
                     particle.className = 'particle';
                     particle.style.left = Math.random() * 100 + '%';
                     particle.style.animationDelay = Math.random() * 20 + 's';
-                    particle.style.animationDuration = (Math.random() * 15 + 15) + 's';
+                    particle.style.animationDuration = (Math.random() * 10 + 15) + 's'; // Min 15s
                     particlesContainer.appendChild(particle);
                 }
                 for (let i = 0; i < heartCount; i++) {
@@ -623,7 +672,7 @@
                     heart.innerHTML = ['💕', '💖', '💗', '💝', '💘'][Math.floor(Math.random() * 5)];
                     heart.style.left = Math.random() * 100 + '%';
                     heart.style.animationDelay = Math.random() * 16 + 's';
-                    heart.style.animationDuration = (Math.random() * 12 + 12) + 's';
+                    heart.style.animationDuration = (Math.random() * 8 + 12) + 's'; // Min 12s
                     particlesContainer.appendChild(heart);
                 }
             }
@@ -638,7 +687,7 @@
                     icon.innerHTML = icons[Math.floor(Math.random() * icons.length)];
                     icon.style.left = Math.random() * 100 + '%';
                     icon.style.animationDelay = Math.random() * 18 + 's';
-                    icon.style.animationDuration = (Math.random() * 12 + 15) + 's';
+                    icon.style.animationDuration = (Math.random() * 8 + 15) + 's'; // Min 15s
                     iconsContainer.appendChild(icon);
                 }
             }
@@ -652,31 +701,37 @@
                     paw.innerHTML = '🐾';
                     paw.style.left = Math.random() * 100 + '%';
                     paw.style.animationDelay = Math.random() * 25 + 's';
-                    paw.style.animationDuration = (Math.random() * 20 + 20) + 's';
+                    paw.style.animationDuration = (Math.random() * 10 + 20) + 's'; // Min 20s
                     pawContainer.appendChild(paw);
                 }
             }
 
-            function createTrail(e) {
-                // Only create trail on mousemove for desktop, and on touchmove for mobile if not reduced motion
+            // Optimized Sparkle Trail Creation
+            function createSparkleTrail(e) {
                 if (prefersReducedMotion) return; // Do not create trail if reduced motion is preferred
 
-                const trail = document.createElement('div');
+                // Limit sparkle creation frequency based on device type
+                // Desktop: 50% chance, Mobile: 20% chance for performance
+                const sparkleChance = isMobileDevice ? 0.2 : 0.5;
+                if (Math.random() > sparkleChance) return;
+
+                const sparkle = document.createElement('div');
                 // Get clientX/Y from event, accounting for touch events
                 const x = e.clientX || (e.touches && e.touches[0].clientX);
                 const y = e.clientY || (e.touches && e.touches[0].clientY);
 
                 if (x === undefined || y === undefined) return; // Exit if coordinates are not available
 
-                trail.className = 'sparkle';
-                trail.style.left = `${x}px`;
-                trail.style.top = `${y}px`;
-                document.body.appendChild(trail);
+                sparkle.className = 'sparkle';
+                // Add a small random offset for a less uniform trail
+                sparkle.style.left = `${x + (Math.random() - 0.5) * 10}px`;
+                sparkle.style.top = `${y + (Math.random() - 0.5) * 10}px`;
+                document.body.appendChild(sparkle);
 
-                setTimeout(() => {
-                    trail.remove();
-                }, 500);
+                // Use animationend to remove for better performance than fixed setTimeout
+                sparkle.addEventListener('animationend', () => sparkle.remove());
             }
+
 
             const kohazePicture = document.getElementById('kohaze-picture');
             const backgroundMusic = document.getElementById('background-music');
@@ -696,29 +751,26 @@
                     backgroundMusic.play().then(() => {
                         isPlaying = true;
                         // Music ON: Update surpriseText and show uniMeowMessage
-                        surpriseText.textContent = "It's actually Uni meowing :3";
-                        uniMeowMessage.textContent = "Meow! Music ON! 🎶";
+                        surpriseText.textContent = "It's actually Uni meowing :3"; // This text stays
+                        uniMeowMessage.textContent = "Meow! Music ON! 🎶"; // This message is temporary
                         uniMeowMessage.style.opacity = 1;
                         setTimeout(() => { uniMeowMessage.style.opacity = 0; }, 3000);
                     }).catch(error => {
                         console.error("Error playing music:", error);
                         uniMeowMessage.textContent = "Autoplay blocked! Tap again?";
                         uniMeowMessage.style.opacity = 1;
-                        setTimeout(() => { uniMeowMessage.style.opacity = 0; }, 3000);
+                        setTimeout(() => { uniMeowMessage.style.opacity = 3000);
                     });
                 } else {
                     backgroundMusic.pause();
                     isPlaying = false;
                     // Music OFF: Revert surpriseText and show pause message
-                    surpriseText.textContent = "Tap Kohaze for a surprise! 🎵";
-                    uniMeowMessage.textContent = "Zzz... Music OFF.";
+                    surpriseText.textContent = "Tap Kohaze for a surprise! 🎵"; // This text stays
+                    uniMeowMessage.textContent = "Zzz... Music OFF."; // This message is temporary
                     uniMeowMessage.style.opacity = 1;
                     setTimeout(() => { uniMeowMessage.style.opacity = 0; }, 3000);
                 }
             });
-
-            // No separate surpriseClickCount logic for dynamic messages,
-            // as the surpriseText now primarily reflects the music state.
         });
     </script>
 </body>
