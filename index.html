@@ -1,20 +1,354 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>KittyKat :3</title>
-
-  <!-- 💬 This is what tells Discord how to embed your page -->
-  <meta property="og:title" content="KittyKat 🐾">
-  <meta property="og:description" content="Kohaze = 🦭.">
-  <meta property="og:image" content="https://kittykat.uk/picture.png">
-  <meta property="og:url" content="https://kittykat.uk">
-  <meta name="theme-color" content="#ff69b4">
-
-  <!-- Optional for Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Keyboard Tester</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Inter font -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        /* Custom Key Styles for the pressed state */
+        .key-active {
+            box-shadow: 0 0 18px #a5b4fc, 0 0 8px #6366f1; /* Stronger Glow effect */
+            transform: scale(0.98);
+            background-color: #4f46e5 !important; /* Indigo-600 */
+            color: #ffffff !important;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'background-dark': '#0f172a', // Slate-900
+                        'card-dark': '#1e293b',      // Slate-800
+                        'key-default': '#334155',    // Slate-700
+                        'key-text': '#f1f5f9',       // Slate-100
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-  <img src="picture.png" alt="Kitty" style="max-width: 100%;">
+<body class="bg-background-dark min-h-screen p-4 sm:p-8 flex flex-col items-center text-key-text">
+
+    <!-- Header -->
+    <header class="text-center mb-6">
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-2">Ultimate Input Tester</h1>
+        <p class="text-indigo-400 text-xl font-medium">Test your keyboard **and** mouse buttons in real time.</p>
+    </header>
+
+    <!-- Key/Mouse Info Display -->
+    <div id="key-info" class="bg-card-dark p-4 sm:p-6 rounded-xl shadow-2xl w-full max-w-2xl mb-8 transition-all duration-100 ease-in-out">
+        <div class="flex flex-col sm:flex-row justify-around">
+            <div class="mb-3 sm:mb-0 text-center">
+                <p class="text-sm uppercase tracking-wider text-gray-400">Physical Key/Button (Code)</p>
+                <p id="display-code" class="text-2xl font-bold text-green-400 transition-all duration-150">Waiting...</p>
+            </div>
+            <div class="text-center">
+                <p class="text-sm uppercase tracking-wider text-gray-400">Character/Function (Key)</p>
+                <p id="display-key" class="text-2xl font-bold text-yellow-400 transition-all duration-150">Waiting...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mouse Tester Section -->
+    <div class="w-full max-w-6xl p-4 sm:p-6 bg-card-dark rounded-3xl shadow-2xl mb-8">
+        <h2 class="text-xl font-bold text-white mb-4 border-b border-indigo-500/50 pb-2">Mouse Button Tester</h2>
+        <div class="flex justify-center space-x-4">
+            <div id="mouse-left" class="key-unit flex-1 h-14 bg-key-default rounded-lg shadow-inner flex items-center justify-center font-semibold transition-all duration-100 ease-out hover:bg-gray-600">
+                Left Click
+            </div>
+            <div id="mouse-middle" class="key-unit flex-1 h-14 bg-key-default rounded-lg shadow-inner flex items-center justify-center font-semibold transition-all duration-100 ease-out hover:bg-gray-600">
+                Middle / Scroll
+            </div>
+            <div id="mouse-right" class="key-unit flex-1 h-14 bg-key-default rounded-lg shadow-inner flex items-center justify-center font-semibold transition-all duration-100 ease-out hover:bg-gray-600">
+                Right Click
+            </div>
+        </div>
+        <p class="text-center text-sm text-gray-400 mt-2">Right click is tested, but may still open the context menu if clicked outside the app preview.</p>
+    </div>
+
+    <!-- Keyboard Layout Container -->
+    <div class="w-full max-w-6xl p-4 sm:p-6 bg-card-dark rounded-3xl shadow-2xl">
+        <h2 class="text-xl font-bold text-white mb-4 border-b border-indigo-500/50 pb-2">Keyboard Layout</h2>
+
+        <!-- Macro for generating key HTML -->
+        <script>
+            /**
+             * Generates the HTML for a single key.
+             * @param {string} text - The visible label on the key.
+             * @param {string} code - The DOM event code (e.g., 'KeyA', 'Space', 'ShiftLeft').
+             * @param {string} [extraClasses=''] - Additional Tailwind classes for size/position.
+             * @returns {string} HTML string.
+             */
+            function keyHtml(text, code, extraClasses = '') {
+                const textSize = text.length > 5 ? 'text-xs' : 'text-base';
+                const keyCode = code === '' ? '' : `id="key-${code}" data-code="${code}"`;
+                return `
+                    <div ${keyCode}
+                         class="key-unit flex items-center justify-center h-10 sm:h-14 bg-key-default rounded-lg shadow-inner cursor-pointer transition-all duration-100 ease-out hover:bg-gray-600 ${extraClasses}">
+                        <span class="font-semibold ${textSize} text-key-text">${text}</span>
+                    </div>
+                `;
+            }
+
+            /**
+             * Generates a row of keys.
+             * Uses w-[100%] / 14 for 1u sizing, w-[150%] / 14 for 1.5u, etc., to simulate proportional keyboard sizes.
+             * @param {Array<Array<string>>} keys - Array of [text, code, classes] tuples.
+             * @returns {string} HTML string for the row.
+             */
+            function rowHtml(keys) {
+                const keyElements = keys.map(([text, code, classes = '']) => keyHtml(text, code, classes)).join('');
+                return `<div class="keyboard-row flex flex-row space-x-1 sm:space-x-2 mb-1 sm:mb-2">${keyElements}</div>`;
+            }
+
+            // Keyboard layout definition (Text, Code, Classes)
+            const keyboardLayout = [
+                // F-Keys Row (Simplified representation)
+                rowHtml([
+                    ['Esc', 'Escape', 'w-[4%] min-w-[30px]'],
+                    // F-keys block 1
+                    ['F1', 'F1', 'w-[4%] min-w-[30px]'], ['F2', 'F2', 'w-[4%] min-w-[30px]'], ['F3', 'F3', 'w-[4%] min-w-[30px]'], ['F4', 'F4', 'w-[4%] min-w-[30px] mr-2 sm:mr-4'],
+                    // F-keys block 2
+                    ['F5', 'F5', 'w-[4%] min-w-[30px]'], ['F6', 'F6', 'w-[4%] min-w-[30px]'], ['F7', 'F7', 'w-[4%] min-w-[30px]'], ['F8', 'F8', 'w-[4%] min-w-[30px] mr-2 sm:mr-4'],
+                    // F-keys block 3
+                    ['F9', 'F9', 'w-[4%] min-w-[30px]'], ['F10', 'F10', 'w-[4%] min-w-[30px]'], ['F11', 'F11', 'w-[4%] min-w-[30px]'], ['F12', 'F12', 'w-[4%] min-w-[30px]'],
+                    // Navigation Keys on F-row
+                    ['PrtSc', 'PrintScreen', 'hidden md:flex w-[4%] min-w-[30px] ml-2 sm:ml-4'],
+                    ['Scroll', 'ScrollLock', 'hidden lg:flex w-[4%] min-w-[30px]'],
+                    ['Pause', 'Pause', 'hidden lg:flex w-[4%] min-w-[30px]'],
+                    // Gap filler for keyboard completeness
+                    ['', '', 'flex-grow'],
+                ]),
+
+                // Top Number Row
+                rowHtml([
+                    ['~ / `', 'Backquote', 'w-[5.2%] min-w-[40px]'],
+                    ['1', 'Digit1', 'w-[5.2%] min-w-[40px]'], ['2', 'Digit2', 'w-[5.2%] min-w-[40px]'], ['3', 'Digit3', 'w-[5.2%] min-w-[40px]'], ['4', 'Digit4', 'w-[5.2%] min-w-[40px]'], ['5', 'Digit5', 'w-[5.2%] min-w-[40px]'],
+                    ['6', 'Digit6', 'w-[5.2%] min-w-[40px]'], ['7', 'Digit7', 'w-[5.2%] min-w-[40px]'], ['8', 'Digit8', 'w-[5.2%] min-w-[40px]'], ['9', 'Digit9', 'w-[5.2%] min-w-[40px]'], ['0', 'Digit0', 'w-[5.2%] min-w-[40px]'],
+                    ['- / _', 'Minus', 'w-[5.2%] min-w-[40px]'],
+                    ['= / +', 'Equal', 'w-[5.2%] min-w-[40px]'],
+                    ['Backspace', 'Backspace', 'w-[8%] min-w-[60px]'], // Adjusted size for more realistic look
+                    ['Insert', 'Insert', 'hidden md:flex w-[5.2%] min-w-[40px] ml-2 sm:ml-4'],
+                    ['Home', 'Home', 'hidden md:flex w-[5.2%] min-w-[40px]'],
+                    ['PageUp', 'PageUp', 'hidden md:flex w-[5.2%] min-w-[40px]'],
+                    ['', '', 'flex-grow'], // Gap filler
+                ]),
+
+                // QWERTY Row
+                rowHtml([
+                    ['Tab', 'Tab', 'w-[7%] min-w-[50px]'], // 1.5u
+                    ['Q', 'KeyQ', 'w-[5.2%] min-w-[40px]'], ['W', 'KeyW', 'w-[5.2%] min-w-[40px]'], ['E', 'KeyE', 'w-[5.2%] min-w-[40px]'], ['R', 'KeyR', 'w-[5.2%] min-w-[40px]'], ['T', 'KeyT', 'w-[5.2%] min-w-[40px]'],
+                    ['Y', 'KeyY', 'w-[5.2%] min-w-[40px]'], ['U', 'KeyU', 'w-[5.2%] min-w-[40px]'], ['I', 'KeyI', 'w-[5.2%] min-w-[40px]'], ['O', 'KeyO', 'w-[5.2%] min-w-[40px]'], ['P', 'KeyP', 'w-[5.2%] min-w-[40px]'],
+                    ['[ / {', 'BracketLeft', 'w-[5.2%] min-w-[40px]'],
+                    ['] / }', 'BracketRight', 'w-[5.2%] min-w-[40px]'],
+                    ['\\ / |', 'Backslash', 'w-[6.8%] min-w-[55px]'], // 1.5u
+                    ['Del', 'Delete', 'hidden md:flex w-[5.2%] min-w-[40px] ml-2 sm:ml-4'],
+                    ['End', 'End', 'hidden md:flex w-[5.2%] min-w-[40px]'],
+                    ['PageDown', 'PageDown', 'hidden md:flex w-[5.2%] min-w-[40px]'],
+                    ['', '', 'flex-grow'], // Gap filler
+                ]),
+
+                // ASDF Row
+                rowHtml([
+                    ['Caps Lock', 'CapsLock', 'w-[8.5%] min-w-[65px]'], // 1.75u
+                    ['A', 'KeyA', 'w-[5.2%] min-w-[40px]'], ['S', 'KeyS', 'w-[5.2%] min-w-[40px]'], ['D', 'KeyD', 'w-[5.2%] min-w-[40px]'], ['F', 'KeyF', 'w-[5.2%] min-w-[40px]'], ['G', 'KeyG', 'w-[5.2%] min-w-[40px]'],
+                    ['H', 'KeyH', 'w-[5.2%] min-w-[40px]'], ['J', 'KeyJ', 'w-[5.2%] min-w-[40px]'], ['K', 'KeyK', 'w-[5.2%] min-w-[40px]'], ['L', 'KeyL', 'w-[5.2%] min-w-[40px]'],
+                    ['; / :', 'Semicolon', 'w-[5.2%] min-w-[40px]'],
+                    ["' / \"", 'Quote', 'w-[5.2%] min-w-[40px]'],
+                    ['Enter', 'Enter', 'w-[10%] min-w-[75px]'], // 2.25u
+                    ['', '', 'flex-grow'], // Gap filler for nav keys
+                    // Arrow Keys and Nav Block Spacer
+                    ['', '', 'hidden md:flex w-[18%]'],
+                ]),
+
+                // ZXCV Row
+                rowHtml([
+                    ['Shift', 'ShiftLeft', 'w-[11.5%] min-w-[90px]'], // 2.25u
+                    ['Z', 'KeyZ', 'w-[5.2%] min-w-[40px]'], ['X', 'KeyX', 'w-[5.2%] min-w-[40px]'], ['C', 'KeyC', 'w-[5.2%] min-w-[40px]'], ['V', 'KeyV', 'w-[5.2%] min-w-[40px]'], ['B', 'KeyB', 'w-[5.2%] min-w-[40px]'],
+                    ['N', 'KeyN', 'w-[5.2%] min-w-[40px]'], ['M', 'KeyM', 'w-[5.2%] min-w-[40px]'],
+                    [', / <', 'Comma', 'w-[5.2%] min-w-[40px]'],
+                    ['. / >', 'Period', 'w-[5.2%] min-w-[40px]'],
+                    ['/ / ?', 'Slash', 'w-[5.2%] min-w-[40px]'],
+                    ['Shift', 'ShiftRight', 'w-[13.5%] min-w-[100px]'], // 2.75u
+                    // Arrow Keys Placement
+                    ['', '', 'hidden md:flex w-[5.2%] min-w-[40px] ml-2 sm:ml-4'],
+                    ['↑', 'ArrowUp', 'w-[5.2%] min-w-[40px]'],
+                    ['', '', 'hidden md:flex w-[5.2%] min-w-[40px]'],
+                    ['', '', 'flex-grow'], // Gap filler
+                ]),
+
+                // Control/Space Row
+                rowHtml([
+                    ['Ctrl', 'ControlLeft', 'w-[7%] min-w-[50px]'], // 1.5u
+                    ['Win', 'MetaLeft', 'w-[7%] min-w-[50px]'], // 1.5u (Meta for Windows/Command)
+                    ['Alt', 'AltLeft', 'w-[7%] min-w-[50px]'], // 1.5u
+                    ['Spacebar', 'Space', 'flex-grow max-w-[40%] min-w-[150px]'], // 6.25u
+                    ['Alt', 'AltRight', 'w-[7%] min-w-[50px]'], // 1.5u
+                    ['Win', 'MetaRight', 'w-[7%] min-w-[50px]'], // 1.5u
+                    ['Menu', 'ContextMenu', 'w-[5.2%] min-w-[40px]'], // 1u
+                    ['Ctrl', 'ControlRight', 'w-[7%] min-w-[50px]'], // 1.5u
+                    // Arrow Keys Row
+                    ['', '', 'hidden md:flex w-[5.2%] min-w-[40px] ml-2 sm:ml-4'],
+                    ['←', 'ArrowLeft', 'w-[5.2%] min-w-[40px]'],
+                    ['↓', 'ArrowDown', 'w-[5.2%] min-w-[40px]'],
+                    ['→', 'ArrowRight', 'w-[5.2%] min-w-[40px]'],
+                    ['', '', 'flex-grow'], // Gap filler
+                ]),
+            ];
+        </script>
+
+        <div id="keyboard-grid" class="p-2 sm:p-4">
+            <!-- Content generated by script -->
+        </div>
+
+    </div>
+
+    <!-- Footer for mobile safety -->
+    <footer class="mt-8 text-sm text-gray-500">
+        Tip: The **Physical Key Location (Code)** is fixed, while the **Character/Function (Key)** changes based on Shift or Caps Lock.
+    </footer>
+
+
+    <script>
+        // --- 1. Key Mapping and DOM Initialization ---
+
+        // Append the generated keyboard layout HTML
+        const keyboardGrid = document.getElementById('keyboard-grid');
+        keyboardGrid.innerHTML = keyboardLayout.join('');
+
+        // Cache DOM elements
+        const displayCode = document.getElementById('display-code');
+        const displayKey = document.getElementById('display-key');
+
+        // Mouse Button IDs map
+        const mouseButtonIds = {
+            0: 'mouse-left',    // Left click
+            1: 'mouse-middle',  // Middle (scroll wheel) click
+            2: 'mouse-right',   // Right click
+        };
+
+        // --- 2. Keyboard Event Handlers ---
+
+        /**
+         * Converts event.code to the format used in our key IDs.
+         * @param {string} code - The raw key code from the event.
+         * @returns {string | null} The formatted ID, or null if key is unmapped.
+         */
+        function getTargetKeyId(code) {
+            // Fn key is not standard and is often uncatchable, we skip it for visual mapping
+            if (code === 'Fn') return null;
+            return `key-${code}`;
+        }
+
+        const handleKeyDown = (event) => {
+            // Prevent default action (like scrolling or browser shortcuts)
+            event.preventDefault();
+
+            const targetKeyId = getTargetKeyId(event.code);
+            if (!targetKeyId) return;
+
+            const keyElement = document.getElementById(targetKeyId);
+
+            // Update info display
+            displayCode.textContent = event.code;
+            // Handle special keys for cleaner display
+            let keyText = event.key;
+            if (event.key === ' ') keyText = '[Spacebar]';
+            if (event.key === 'Meta') keyText = event.code.includes('Left') ? '[Win/Cmd Left]' : '[Win/Cmd Right]';
+            displayKey.textContent = keyText;
+
+
+            // Apply active class if element exists and is not already active (to handle key repeat)
+            if (keyElement && !keyElement.classList.contains('key-active')) {
+                keyElement.classList.add('key-active');
+            }
+        };
+
+        const handleKeyUp = (event) => {
+            const targetKeyId = getTargetKeyId(event.code);
+            if (!targetKeyId) return;
+
+            const keyElement = document.getElementById(targetKeyId);
+
+            // Remove active class
+            if (keyElement) {
+                keyElement.classList.remove('key-active');
+            }
+        };
+
+        // --- 3. Mouse Event Handlers ---
+
+        const handleMouseDown = (event) => {
+            // Prevent context menu on right click to register the event
+            if (event.button === 2) {
+                event.preventDefault();
+            }
+
+            const mouseId = mouseButtonIds[event.button];
+            if (mouseId) {
+                const mouseElement = document.getElementById(mouseId);
+                mouseElement.classList.add('key-active');
+
+                // Update info display
+                displayCode.textContent = `Mouse Button ${event.button}`;
+                displayKey.textContent = mouseElement.textContent.trim();
+            }
+        };
+
+        const handleMouseUp = (event) => {
+            const mouseId = mouseButtonIds[event.button];
+            if (mouseId) {
+                const mouseElement = document.getElementById(mouseId);
+                mouseElement.classList.remove('key-active');
+            }
+        };
+
+        // --- 4. Attach Listeners ---
+
+        // Keyboard listeners on the entire window
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
+
+        // Mouse listeners on the entire window (Capturing outside the preview is tricky in IFrames, but this is best practice)
+        window.addEventListener('mousedown', handleMouseDown);
+        window.addEventListener('mouseup', handleMouseUp);
+
+        // Disable context menu specifically for the right click test
+        window.addEventListener('contextmenu', (e) => e.preventDefault());
+
+
+        // Optional: Visual click feedback on the keyboard layout (for touch/manual clicking)
+        document.querySelectorAll('.key-unit').forEach(key => {
+            if (key.id.startsWith('key-')) {
+                key.addEventListener('mousedown', (e) => {
+                    e.currentTarget.classList.add('key-active');
+                });
+                key.addEventListener('mouseup', (e) => {
+                    e.currentTarget.classList.remove('key-active');
+                });
+                key.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    e.currentTarget.classList.add('key-active');
+                });
+                key.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    e.currentTarget.classList.remove('key-active');
+                });
+            }
+        });
+
+    </script>
 </body>
 </html>
