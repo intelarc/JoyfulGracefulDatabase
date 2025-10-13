@@ -11,17 +11,37 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
         body {
             font-family: 'Inter', sans-serif;
+            /* Prevent text selection when rapid clicking/tapping */
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
         }
-        /* Custom Key Styles for the pressed state */
+
+        /* Continuous RGB Border Animation */
+        .rgb-border {
+            padding: 3px; /* Space for the border effect */
+            border-radius: 1.75rem; /* Apply to match the rounded-3xl container */
+            /* Initial gradient colors for the background */
+            background: linear-gradient(135deg, #f87171, #34d399, #60a5fa, #facc15);
+            background-size: 400% 400%;
+            animation: gradient-shift 6s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Custom Key Styles for the pressed state (Solid Glow) */
         .key-active {
-            box-shadow: 0 0 18px #a5b4fc, 0 0 8px #6366f1; /* Stronger Glow effect */
-            transform: scale(0.98);
-            background-color: #4f46e5 !important; /* Indigo-600 */
+            background-color: #4f46e5 !important;
             color: #ffffff !important;
+            transform: scale(0.98);
+            /* Solid blue/indigo glow */
+            box-shadow: 0 0 15px #60a5fa, 0 0 5px #a5b4fc; 
+            animation: none; /* Ensure no individual RGB glow */
         }
     </style>
     <script>
@@ -62,7 +82,7 @@
     </div>
 
     <!-- Mouse Tester Section -->
-    <div class="w-full max-w-6xl p-4 sm:p-6 bg-card-dark rounded-3xl shadow-2xl mb-8">
+    <div class="w-full max-w-5xl p-4 sm:p-6 bg-card-dark rounded-3xl shadow-2xl mb-8">
         <h2 class="text-xl font-bold text-white mb-4 border-b border-indigo-500/50 pb-2">Mouse Button Tester</h2>
         <div class="flex justify-center space-x-4">
             <div id="mouse-left" class="key-unit flex-1 h-14 bg-key-default rounded-lg shadow-inner flex items-center justify-center font-semibold transition-all duration-100 ease-out hover:bg-gray-600">
@@ -78,142 +98,35 @@
         <p class="text-center text-sm text-gray-400 mt-2">Right click is tested, but may still open the context menu if clicked outside the app preview.</p>
     </div>
 
-    <!-- Keyboard Layout Container -->
-    <div class="w-full max-w-6xl p-4 sm:p-6 bg-card-dark rounded-3xl shadow-2xl">
-        <h2 class="text-xl font-bold text-white mb-4 border-b border-indigo-500/50 pb-2">Keyboard Layout</h2>
-
-        <!-- Macro for generating key HTML -->
-        <script>
-            /**
-             * Generates the HTML for a single key.
-             * @param {string} text - The visible label on the key.
-             * @param {string} code - The DOM event code (e.g., 'KeyA', 'Space', 'ShiftLeft').
-             * @param {string} [extraClasses=''] - Additional Tailwind classes for size/position.
-             * @returns {string} HTML string.
-             */
-            function keyHtml(text, code, extraClasses = '') {
-                const textSize = text.length > 5 ? 'text-xs' : 'text-base';
-                const keyCode = code === '' ? '' : `id="key-${code}" data-code="${code}"`;
-                return `
-                    <div ${keyCode}
-                         class="key-unit flex items-center justify-center h-10 sm:h-14 bg-key-default rounded-lg shadow-inner cursor-pointer transition-all duration-100 ease-out hover:bg-gray-600 ${extraClasses}">
-                        <span class="font-semibold ${textSize} text-key-text">${text}</span>
-                    </div>
-                `;
-            }
-
-            /**
-             * Generates a row of keys.
-             * Uses w-[100%] / 14 for 1u sizing, w-[150%] / 14 for 1.5u, etc., to simulate proportional keyboard sizes.
-             * @param {Array<Array<string>>} keys - Array of [text, code, classes] tuples.
-             * @returns {string} HTML string for the row.
-             */
-            function rowHtml(keys) {
-                const keyElements = keys.map(([text, code, classes = '']) => keyHtml(text, code, classes)).join('');
-                return `<div class="keyboard-row flex flex-row space-x-1 sm:space-x-2 mb-1 sm:mb-2">${keyElements}</div>`;
-            }
-
-            // Keyboard layout definition (Text, Code, Classes)
-            const keyboardLayout = [
-                // F-Keys Row (Simplified representation)
-                rowHtml([
-                    ['Esc', 'Escape', 'w-[4%] min-w-[30px]'],
-                    // F-keys block 1
-                    ['F1', 'F1', 'w-[4%] min-w-[30px]'], ['F2', 'F2', 'w-[4%] min-w-[30px]'], ['F3', 'F3', 'w-[4%] min-w-[30px]'], ['F4', 'F4', 'w-[4%] min-w-[30px] mr-2 sm:mr-4'],
-                    // F-keys block 2
-                    ['F5', 'F5', 'w-[4%] min-w-[30px]'], ['F6', 'F6', 'w-[4%] min-w-[30px]'], ['F7', 'F7', 'w-[4%] min-w-[30px]'], ['F8', 'F8', 'w-[4%] min-w-[30px] mr-2 sm:mr-4'],
-                    // F-keys block 3
-                    ['F9', 'F9', 'w-[4%] min-w-[30px]'], ['F10', 'F10', 'w-[4%] min-w-[30px]'], ['F11', 'F11', 'w-[4%] min-w-[30px]'], ['F12', 'F12', 'w-[4%] min-w-[30px]'],
-                    // Navigation Keys on F-row
-                    ['PrtSc', 'PrintScreen', 'hidden md:flex w-[4%] min-w-[30px] ml-2 sm:ml-4'],
-                    ['Scroll', 'ScrollLock', 'hidden lg:flex w-[4%] min-w-[30px]'],
-                    ['Pause', 'Pause', 'hidden lg:flex w-[4%] min-w-[30px]'],
-                    // Gap filler for keyboard completeness
-                    ['', '', 'flex-grow'],
-                ]),
-
-                // Top Number Row
-                rowHtml([
-                    ['~ / `', 'Backquote', 'w-[5.2%] min-w-[40px]'],
-                    ['1', 'Digit1', 'w-[5.2%] min-w-[40px]'], ['2', 'Digit2', 'w-[5.2%] min-w-[40px]'], ['3', 'Digit3', 'w-[5.2%] min-w-[40px]'], ['4', 'Digit4', 'w-[5.2%] min-w-[40px]'], ['5', 'Digit5', 'w-[5.2%] min-w-[40px]'],
-                    ['6', 'Digit6', 'w-[5.2%] min-w-[40px]'], ['7', 'Digit7', 'w-[5.2%] min-w-[40px]'], ['8', 'Digit8', 'w-[5.2%] min-w-[40px]'], ['9', 'Digit9', 'w-[5.2%] min-w-[40px]'], ['0', 'Digit0', 'w-[5.2%] min-w-[40px]'],
-                    ['- / _', 'Minus', 'w-[5.2%] min-w-[40px]'],
-                    ['= / +', 'Equal', 'w-[5.2%] min-w-[40px]'],
-                    ['Backspace', 'Backspace', 'w-[8%] min-w-[60px]'], // Adjusted size for more realistic look
-                    ['Insert', 'Insert', 'hidden md:flex w-[5.2%] min-w-[40px] ml-2 sm:ml-4'],
-                    ['Home', 'Home', 'hidden md:flex w-[5.2%] min-w-[40px]'],
-                    ['PageUp', 'PageUp', 'hidden md:flex w-[5.2%] min-w-[40px]'],
-                    ['', '', 'flex-grow'], // Gap filler
-                ]),
-
-                // QWERTY Row
-                rowHtml([
-                    ['Tab', 'Tab', 'w-[7%] min-w-[50px]'], // 1.5u
-                    ['Q', 'KeyQ', 'w-[5.2%] min-w-[40px]'], ['W', 'KeyW', 'w-[5.2%] min-w-[40px]'], ['E', 'KeyE', 'w-[5.2%] min-w-[40px]'], ['R', 'KeyR', 'w-[5.2%] min-w-[40px]'], ['T', 'KeyT', 'w-[5.2%] min-w-[40px]'],
-                    ['Y', 'KeyY', 'w-[5.2%] min-w-[40px]'], ['U', 'KeyU', 'w-[5.2%] min-w-[40px]'], ['I', 'KeyI', 'w-[5.2%] min-w-[40px]'], ['O', 'KeyO', 'w-[5.2%] min-w-[40px]'], ['P', 'KeyP', 'w-[5.2%] min-w-[40px]'],
-                    ['[ / {', 'BracketLeft', 'w-[5.2%] min-w-[40px]'],
-                    ['] / }', 'BracketRight', 'w-[5.2%] min-w-[40px]'],
-                    ['\\ / |', 'Backslash', 'w-[6.8%] min-w-[55px]'], // 1.5u
-                    ['Del', 'Delete', 'hidden md:flex w-[5.2%] min-w-[40px] ml-2 sm:ml-4'],
-                    ['End', 'End', 'hidden md:flex w-[5.2%] min-w-[40px]'],
-                    ['PageDown', 'PageDown', 'hidden md:flex w-[5.2%] min-w-[40px]'],
-                    ['', '', 'flex-grow'], // Gap filler
-                ]),
-
-                // ASDF Row
-                rowHtml([
-                    ['Caps Lock', 'CapsLock', 'w-[8.5%] min-w-[65px]'], // 1.75u
-                    ['A', 'KeyA', 'w-[5.2%] min-w-[40px]'], ['S', 'KeyS', 'w-[5.2%] min-w-[40px]'], ['D', 'KeyD', 'w-[5.2%] min-w-[40px]'], ['F', 'KeyF', 'w-[5.2%] min-w-[40px]'], ['G', 'KeyG', 'w-[5.2%] min-w-[40px]'],
-                    ['H', 'KeyH', 'w-[5.2%] min-w-[40px]'], ['J', 'KeyJ', 'w-[5.2%] min-w-[40px]'], ['K', 'KeyK', 'w-[5.2%] min-w-[40px]'], ['L', 'KeyL', 'w-[5.2%] min-w-[40px]'],
-                    ['; / :', 'Semicolon', 'w-[5.2%] min-w-[40px]'],
-                    ["' / \"", 'Quote', 'w-[5.2%] min-w-[40px]'],
-                    ['Enter', 'Enter', 'w-[10%] min-w-[75px]'], // 2.25u
-                    ['', '', 'flex-grow'], // Gap filler for nav keys
-                    // Arrow Keys and Nav Block Spacer
-                    ['', '', 'hidden md:flex w-[18%]'],
-                ]),
-
-                // ZXCV Row
-                rowHtml([
-                    ['Shift', 'ShiftLeft', 'w-[11.5%] min-w-[90px]'], // 2.25u
-                    ['Z', 'KeyZ', 'w-[5.2%] min-w-[40px]'], ['X', 'KeyX', 'w-[5.2%] min-w-[40px]'], ['C', 'KeyC', 'w-[5.2%] min-w-[40px]'], ['V', 'KeyV', 'w-[5.2%] min-w-[40px]'], ['B', 'KeyB', 'w-[5.2%] min-w-[40px]'],
-                    ['N', 'KeyN', 'w-[5.2%] min-w-[40px]'], ['M', 'KeyM', 'w-[5.2%] min-w-[40px]'],
-                    [', / <', 'Comma', 'w-[5.2%] min-w-[40px]'],
-                    ['. / >', 'Period', 'w-[5.2%] min-w-[40px]'],
-                    ['/ / ?', 'Slash', 'w-[5.2%] min-w-[40px]'],
-                    ['Shift', 'ShiftRight', 'w-[13.5%] min-w-[100px]'], // 2.75u
-                    // Arrow Keys Placement
-                    ['', '', 'hidden md:flex w-[5.2%] min-w-[40px] ml-2 sm:ml-4'],
-                    ['↑', 'ArrowUp', 'w-[5.2%] min-w-[40px]'],
-                    ['', '', 'hidden md:flex w-[5.2%] min-w-[40px]'],
-                    ['', '', 'flex-grow'], // Gap filler
-                ]),
-
-                // Control/Space Row
-                rowHtml([
-                    ['Ctrl', 'ControlLeft', 'w-[7%] min-w-[50px]'], // 1.5u
-                    ['Win', 'MetaLeft', 'w-[7%] min-w-[50px]'], // 1.5u (Meta for Windows/Command)
-                    ['Alt', 'AltLeft', 'w-[7%] min-w-[50px]'], // 1.5u
-                    ['Spacebar', 'Space', 'flex-grow max-w-[40%] min-w-[150px]'], // 6.25u
-                    ['Alt', 'AltRight', 'w-[7%] min-w-[50px]'], // 1.5u
-                    ['Win', 'MetaRight', 'w-[7%] min-w-[50px]'], // 1.5u
-                    ['Menu', 'ContextMenu', 'w-[5.2%] min-w-[40px]'], // 1u
-                    ['Ctrl', 'ControlRight', 'w-[7%] min-w-[50px]'], // 1.5u
-                    // Arrow Keys Row
-                    ['', '', 'hidden md:flex w-[5.2%] min-w-[40px] ml-2 sm:ml-4'],
-                    ['←', 'ArrowLeft', 'w-[5.2%] min-w-[40px]'],
-                    ['↓', 'ArrowDown', 'w-[5.2%] min-w-[40px]'],
-                    ['→', 'ArrowRight', 'w-[5.2%] min-w-[40px]'],
-                    ['', '', 'flex-grow'], // Gap filler
-                ]),
-            ];
-        </script>
-
-        <div id="keyboard-grid" class="p-2 sm:p-4">
-            <!-- Content generated by script -->
-        </div>
-
+    <!-- Layout Controls -->
+    <div class="w-full max-w-7xl mb-6 flex justify-center space-x-2 sm:space-x-4">
+        <!-- New 100% Full Size Option -->
+        <button id="btn-104" data-layout="104" class="layout-btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-3 sm:px-4 rounded-lg shadow-md transition-colors duration-150 text-sm sm:text-base">
+            100% (Full Size)
+        </button>
+        <!-- Renamed TKL Option -->
+        <button id="btn-87" data-layout="87" class="layout-btn bg-gray-600 hover:bg-indigo-700 text-white font-bold py-2 px-3 sm:px-4 rounded-lg shadow-md transition-colors duration-150 text-sm sm:text-base">
+            87% (TKL)
+        </button>
+        <button id="btn-75" data-layout="75" class="layout-btn bg-gray-600 hover:bg-indigo-700 text-white font-bold py-2 px-3 sm:px-4 rounded-lg shadow-md transition-colors duration-150 text-sm sm:text-base">
+            75% (Compact)
+        </button>
+        <button id="btn-65" data-layout="65" class="layout-btn bg-gray-600 hover:bg-indigo-700 text-white font-bold py-2 px-3 sm:px-4 rounded-lg shadow-md transition-colors duration-150 text-sm sm:text-base">
+            65% (Minimal)
+        </button>
     </div>
+
+    <!-- Keyboard Layout Container -->
+    <!-- The rgb-border class provides the continuous glow -->
+    <div id="keyboard-container-wrapper" class="rgb-border w-full max-w-7xl shadow-2xl">
+        <div id="keyboard-container" class="bg-card-dark rounded-[1.5rem] p-4 sm:p-6">
+            <h2 id="layout-title" class="text-xl font-bold text-white mb-4 border-b border-indigo-500/50 pb-2">Keyboard Layout (100% Full Size)</h2>
+            <div id="keyboard-grid" class="p-2 sm:p-4">
+                <!-- Content will be injected here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
 
     <!-- Footer for mobile safety -->
     <footer class="mt-8 text-sm text-gray-500">
@@ -222,15 +135,321 @@
 
 
     <script>
-        // --- 1. Key Mapping and DOM Initialization ---
+        // --- KEY LAYOUT DEFINITIONS & HELPERS ---
 
-        // Append the generated keyboard layout HTML
-        const keyboardGrid = document.getElementById('keyboard-grid');
-        keyboardGrid.innerHTML = keyboardLayout.join('');
+        /**
+         * Generates the HTML for a single key.
+         */
+        function keyHtml(text, code, extraClasses = '') {
+            // Adjust text size dynamically for long labels (like function keys)
+            const textSize = text.length > 5 ? 'text-xs' : 'text-base';
+            const keyCode = code === '' ? '' : `id="key-${code}" data-code="${code}"`;
+            return `
+                <div ${keyCode}
+                     class="key-unit flex items-center justify-center h-10 sm:h-12 bg-key-default rounded-lg shadow-inner cursor-pointer transition-all duration-100 ease-out hover:bg-gray-600 ${extraClasses}">
+                    <span class="font-semibold ${textSize} text-key-text">${text}</span>
+                </div>
+            `;
+        }
+
+        /**
+         * Generates a row of keys.
+         */
+        function rowHtml(keys) {
+            const keyElements = keys.map(([text, code, classes = '']) => keyHtml(text, code, classes)).join('');
+            return `<div class="keyboard-row flex flex-row space-x-1 sm:space-x-2 mb-1 sm:mb-2">${keyElements}</div>`;
+        }
+
+        // --- LAYOUT DEFINITIONS ---
+        // (Text, Code, Classes)
+
+        const layout104 = { // 100% Full Size (with Numpad)
+            title: 'Keyboard Layout (100% Full Size)',
+            grid: [
+                // F-Keys Row + Numpad Function Keys
+                rowHtml([
+                    // F Keys
+                    ['Esc', 'Escape', 'w-[3%]'], ['F1', 'F1', 'w-[3%] ml-2'], ['F2', 'F2', 'w-[3%]'], ['F3', 'F3', 'w-[3%]'], ['F4', 'F4', 'w-[3%] mr-2'],
+                    ['F5', 'F5', 'w-[3%]'], ['F6', 'F6', 'w-[3%]'], ['F7', 'F7', 'w-[3%]'], ['F8', 'F8', 'w-[3%] mr-2'],
+                    ['F9', 'F9', 'w-[3%]'], ['F10', 'F10', 'w-[3%]'], ['F11', 'F11', 'w-[3%]'], ['F12', 'F12', 'w-[3%]'],
+                    // Edit/Nav Top
+                    ['PrtSc', 'PrintScreen', 'w-[4.5%] ml-4'], ['Scroll', 'ScrollLock', 'w-[4.5%]'], ['Pause', 'Pause', 'w-[4.5%]'],
+                    // Numpad Top (simplified 1u height keys)
+                    ['NumLk', 'NumLock', 'w-[3%] ml-4'], ['/', 'NumpadDivide', 'w-[3%]'], ['*', 'NumpadMultiply', 'w-[3%]'], ['-', 'NumpadSubtract', 'w-[3%]'],
+                ]),
+
+                // Main Block + Edit/Nav + Numpad
+                `<div class="flex justify-between">
+                    <div class="flex flex-col w-[60%]">` +
+                        // Alpha/Number Rows
+                        rowHtml([ // Number Row
+                            ['~ / `', 'Backquote', 'w-[6.25%]'], ['1', 'Digit1', 'w-[6.25%]'], ['2', 'Digit2', 'w-[6.25%]'], ['3', 'Digit3', 'w-[6.25%]'], ['4', 'Digit4', 'w-[6.25%]'], ['5', 'Digit5', 'w-[6.25%]'],
+                            ['6', 'Digit6', 'w-[6.25%]'], ['7', 'Digit7', 'w-[6.25%]'], ['8', 'Digit8', 'w-[6.25%]'], ['9', 'Digit9', 'w-[6.25%]'], ['0', 'Digit0', 'w-[6.25%]'],
+                            ['- / _', 'Minus', 'w-[6.25%]'], ['= / +', 'Equal', 'w-[6.25%]'], ['Backspace', 'Backspace', 'w-[9.4%]'],
+                        ]) +
+                        rowHtml([ // QWERTY Row
+                            ['Tab', 'Tab', 'w-[9.4%]'], ['Q', 'KeyQ', 'w-[6.25%]'], ['W', 'KeyW', 'w-[6.25%]'], ['E', 'KeyE', 'w-[6.25%]'], ['R', 'KeyR', 'w-[6.25%]'], ['T', 'KeyT', 'w-[6.25%]'],
+                            ['Y', 'KeyY', 'w-[6.25%]'], ['U', 'KeyU', 'w-[6.25%]'], ['I', 'KeyI', 'w-[6.25%]'], ['O', 'KeyO', 'w-[6.25%]'], ['P', 'KeyP', 'w-[6.25%]'],
+                            ['[ / {', 'BracketLeft', 'w-[6.25%]'], ['] / }', 'BracketRight', 'w-[6.25%]'], ['\\ / |', 'Backslash', 'w-[9.4%]'],
+                        ]) +
+                        rowHtml([ // ASDF Row
+                            ['Caps Lock', 'CapsLock', 'w-[10.9%]'], ['A', 'KeyA', 'w-[6.25%]'], ['S', 'KeyS', 'w-[6.25%]'], ['D', 'KeyD', 'w-[6.25%]'], ['F', 'KeyF', 'w-[6.25%]'], ['G', 'KeyG', 'w-[6.25%]'],
+                            ['H', 'KeyH', 'w-[6.25%]'], ['J', 'KeyJ', 'w-[6.25%]'], ['K', 'KeyK', 'w-[6.25%]'], ['L', 'KeyL', 'w-[6.25%]'],
+                            ['; / :', 'Semicolon', 'w-[6.25%]'], ["' / \"", 'Quote', 'w-[6.25%]'], ['Enter', 'Enter', 'w-[12.5%]'],
+                        ]) +
+                        rowHtml([ // ZXCV Row
+                            ['Shift', 'ShiftLeft', 'w-[13.5%]'], ['Z', 'KeyZ', 'w-[6.25%]'], ['X', 'KeyX', 'w-[6.25%]'], ['C', 'KeyC', 'w-[6.25%]'], ['V', 'KeyV', 'w-[6.25%]'], ['B', 'KeyB', 'w-[6.25%]'],
+                            ['N', 'KeyN', 'w-[6.25%]'], ['M', 'KeyM', 'w-[6.25%]'],
+                            [', / <', 'Comma', 'w-[6.25%]'], ['. / >', 'Period', 'w-[6.25%]'], ['/ / ?', 'Slash', 'w-[6.25%]'], ['Shift', 'ShiftRight', 'w-[16%]'],
+                        ]) +
+                        rowHtml([ // Bottom Control Row
+                            ['Ctrl', 'ControlLeft', 'w-[6.25%]'], ['Win', 'MetaLeft', 'w-[6.25%]'], ['Alt', 'AltLeft', 'w-[6.25%]'],
+                            ['Spacebar', 'Space', 'flex-grow max-w-[40%] min-w-[150px]'],
+                            ['Alt', 'AltRight', 'w-[6.25%]'], ['Win', 'MetaRight', 'w-[6.25%]'], ['Menu', 'ContextMenu', 'w-[6.25%]'], ['Ctrl', 'ControlRight', 'w-[6.25%]'],
+                        ]) +
+                    `</div>` +
+
+                    // Edit/Nav Cluster + Arrow Keys
+                    `<div class="flex flex-col w-[17%] ml-2">
+                        ${rowHtml([['Insert', 'Insert'], ['Home', 'Home'], ['PageUp', 'PageUp']])}
+                        ${rowHtml([['Delete', 'Delete'], ['End', 'End'], ['PageDown', 'PageDown']])}
+                        <div class="h-[60px]"></div> <!-- Spacer to align with Spacebar -->
+                        ${rowHtml([['', ''], ['↑', 'ArrowUp', 'w-1/3'], ['', '']])}
+                        ${rowHtml([['←', 'ArrowLeft', 'w-1/3'], ['↓', 'ArrowDown', 'w-1/3'], ['→', 'ArrowRight', 'w-1/3']])}
+                    </div>` +
+
+                    // Numpad Block (4 rows, 4 columns for a clean representation)
+                    `<div class="flex flex-col w-[20%] ml-4">
+                        <!-- Numpad Top row already defined in F-keys row -->
+                        ${rowHtml([['7', 'Numpad7', 'w-1/4'], ['8', 'Numpad8', 'w-1/4'], ['9', 'Numpad9', 'w-1/4'], ['+', 'NumpadAdd', 'w-1/4']])}
+                        ${rowHtml([['4', 'Numpad4', 'w-1/4'], ['5', 'Numpad5', 'w-1/4'], ['6', 'Numpad6', 'w-1/4'], ['Enter', 'NumpadEnter', 'w-1/4']])}
+                        ${rowHtml([['1', 'Numpad1', 'w-1/4'], ['2', 'Numpad2', 'w-1/4'], ['3', 'Numpad3', 'w-1/4'], ['', 'NumpadSplit1', 'w-1/4']])} <!-- Placeholder for 2u key height -->
+                        ${rowHtml([['0', 'Numpad0', 'w-1/2'], ['.', 'NumpadDecimal', 'w-1/4'], ['', 'NumpadSplit2', 'w-1/4']])} <!-- Placeholder for 2u key width -->
+                    </div>` +
+
+                `</div>`,
+            ], <!-- FIX: Added missing closing bracket for the 'grid' array -->
+            wrapperClass: 'max-w-7xl' // Max width for full keyboard
+        };
+
+        const layout87 = { // TKL Style (Tenkeyless) - Renamed from 100%
+            title: 'Keyboard Layout (87% TKL - Tenkeyless)',
+            grid: [
+                // F-Keys Row
+                rowHtml([
+                    ['Esc', 'Escape', 'w-[4.5%]'],
+                    ['F1', 'F1', 'w-[4.5%] ml-2 sm:ml-4'], ['F2', 'F2', 'w-[4.5%]'], ['F3', 'F3', 'w-[4.5%]'], ['F4', 'F4', 'w-[4.5%] mr-2 sm:mr-4'],
+                    ['F5', 'F5', 'w-[4.5%]'], ['F6', 'F6', 'w-[4.5%]'], ['F7', 'F7', 'w-[4.5%]'], ['F8', 'F8', 'w-[4.5%] mr-2 sm:mr-4'],
+                    ['F9', 'F9', 'w-[4.5%]'], ['F10', 'F10', 'w-[4.5%]'], ['F11', 'F11', 'w-[4.5%]'], ['F12', 'F12', 'w-[4.5%]'],
+                    ['PrtSc', 'PrintScreen', 'w-[4.5%] ml-2 sm:ml-4'],
+                    ['Scroll', 'ScrollLock', 'w-[4.5%]'],
+                    ['Pause', 'Pause', 'w-[4.5%]'],
+                ]),
+
+                // Number/Alpha Block + Nav/Edit Block
+                `<div class="flex justify-between">
+                    <div class="flex flex-col w-[79%]">` +
+                        // Top Number Row
+                        rowHtml([
+                            ['~ / `', 'Backquote', 'w-[5.8%]'],
+                            ['1', 'Digit1', 'w-[5.8%]'], ['2', 'Digit2', 'w-[5.8%]'], ['3', 'Digit3', 'w-[5.8%]'], ['4', 'Digit4', 'w-[5.8%]'], ['5', 'Digit5', 'w-[5.8%]'],
+                            ['6', 'Digit6', 'w-[5.8%]'], ['7', 'Digit7', 'w-[5.8%]'], ['8', 'Digit8', 'w-[5.8%]'], ['9', 'Digit9', 'w-[5.8%]'], ['0', 'Digit0', 'w-[5.8%]'],
+                            ['- / _', 'Minus', 'w-[5.8%]'],
+                            ['= / +', 'Equal', 'w-[5.8%]'],
+                            ['Backspace', 'Backspace', 'w-[9.2%]'],
+                        ]) +
+                        // QWERTY Row
+                        rowHtml([
+                            ['Tab', 'Tab', 'w-[8%]'],
+                            ['Q', 'KeyQ', 'w-[5.8%]'], ['W', 'KeyW', 'w-[5.8%]'], ['E', 'KeyE', 'w-[5.8%]'], ['R', 'KeyR', 'w-[5.8%]'], ['T', 'KeyT', 'w-[5.8%]'],
+                            ['Y', 'KeyY', 'w-[5.8%]'], ['U', 'KeyU', 'w-[5.8%]'], ['I', 'KeyI', 'w-[5.8%]'], ['O', 'KeyO', 'w-[5.8%]'], ['P', 'KeyP', 'w-[5.8%]'],
+                            ['[ / {', 'BracketLeft', 'w-[5.8%]'],
+                            ['] / }', 'BracketRight', 'w-[5.8%]'],
+                            ['\\ / |', 'Backslash', 'w-[7%]'],
+                        ]) +
+                        // ASDF Row
+                        rowHtml([
+                            ['Caps Lock', 'CapsLock', 'w-[9.5%]'],
+                            ['A', 'KeyA', 'w-[5.8%]'], ['S', 'KeyS', 'w-[5.8%]'], ['D', 'KeyD', 'w-[5.8%]'], ['F', 'KeyF', 'w-[5.8%]'], ['G', 'KeyG', 'w-[5.8%]'],
+                            ['H', 'KeyH', 'w-[5.8%]'], ['J', 'KeyJ', 'w-[5.8%]'], ['K', 'KeyK', 'w-[5.8%]'], ['L', 'KeyL', 'w-[5.8%]'],
+                            ['; / :', 'Semicolon', 'w-[5.8%]'],
+                            ["' / \"", 'Quote', 'w-[5.8%]'],
+                            ['Enter', 'Enter', 'w-[11.2%]'],
+                        ]) +
+                        // ZXCV Row
+                        rowHtml([
+                            ['Shift', 'ShiftLeft', 'w-[11.8%]'],
+                            ['Z', 'KeyZ', 'w-[5.8%]'], ['X', 'KeyX', 'w-[5.8%]'], ['C', 'KeyC', 'w-[5.8%]'], ['V', 'KeyV', 'w-[5.8%]'], ['B', 'KeyB', 'w-[5.8%]'],
+                            ['N', 'KeyN', 'w-[5.8%]'], ['M', 'KeyM', 'w-[5.8%]'],
+                            [', / <', 'Comma', 'w-[5.8%]'],
+                            ['. / >', 'Period', 'w-[5.8%]'],
+                            ['/ / ?', 'Slash', 'w-[5.8%]'],
+                            ['Shift', 'ShiftRight', 'w-[15%]'],
+                        ]) +
+                        // Bottom Control Row
+                        rowHtml([
+                            ['Ctrl', 'ControlLeft', 'w-[7%]'],
+                            ['Win', 'MetaLeft', 'w-[7%]'],
+                            ['Alt', 'AltLeft', 'w-[7%]'],
+                            ['Spacebar', 'Space', 'flex-grow max-w-[45%] min-w-[150px]'],
+                            ['Alt', 'AltRight', 'w-[7%]'],
+                            ['Win', 'MetaRight', 'w-[7%]'],
+                            ['Menu', 'ContextMenu', 'w-[7%]'],
+                            ['Ctrl', 'ControlRight', 'w-[7%]'],
+                        ]) +
+                    `</div>` +
+                    // Nav/Edit Cluster (Separate block)
+                    `<div class="flex flex-col w-[19%] ml-2">
+                        ${rowHtml([['Insert', 'Insert'], ['Home', 'Home'], ['PageUp', 'PageUp']])}
+                        ${rowHtml([['Delete', 'Delete'], ['End', 'End'], ['PageDown', 'PageDown']])}
+                        <div class="h-[60px]"></div> <!-- Spacer to align arrow keys -->
+                        ${rowHtml([['', ''], ['↑', 'ArrowUp', 'w-1/3'], ['', '']])}
+                        ${rowHtml([['←', 'ArrowLeft', 'w-1/3'], ['↓', 'ArrowDown', 'w-1/3'], ['→', 'ArrowRight', 'w-1/3']])}
+                    </div>
+                </div>`,
+            ],
+            wrapperClass: 'max-w-5xl' // TKL width
+        };
+
+        const layout75 = { // Compact Style (Integrated Nav/Arrow cluster)
+            title: 'Keyboard Layout (75% Compact)',
+            grid: [
+                // F-Keys Row
+                rowHtml([
+                    ['Esc', 'Escape', 'w-[5%]'],
+                    ['F1', 'F1', 'w-[5%] ml-2 sm:ml-4'], ['F2', 'F2', 'w-[5%]'], ['F3', 'F3', 'w-[5%]'], ['F4', 'F4', 'w-[5%] mr-2 sm:mr-4'],
+                    ['F5', 'F5', 'w-[5%]'], ['F6', 'F6', 'w-[5%]'], ['F7', 'F7', 'w-[5%]'], ['F8', 'F8', 'w-[5%] mr-2 sm:mr-4'],
+                    ['F9', 'F9', 'w-[5%]'], ['F10', 'F10', 'w-[5%]'], ['F11', 'F11', 'w-[5%]'], ['F12', 'F12', 'w-[5%]'],
+                    // 75% Nav Cluster
+                    ['Del', 'Delete', 'w-[6%] ml-2 sm:ml-4'],
+                    ['End', 'End', 'w-[6%]'],
+                    ['PrtSc', 'PrintScreen', 'w-[6%]'],
+                ]), 
+
+                // Alpha/Modifier Block + Vertical Nav Cluster
+                `<div class="flex justify-between">
+                    <div id="alpha-block-75" class="flex flex-col w-full sm:w-[78%] pr-0 sm:pr-4">` +
+                        // Top Number Row
+                        rowHtml([
+                            ['~ / `', 'Backquote', 'w-[5.4%]'], ['1', 'Digit1', 'w-[5.4%]'], ['2', 'Digit2', 'w-[5.4%]'], ['3', 'Digit3', 'w-[5.4%]'], ['4', 'Digit4', 'w-[5.4%]'], ['5', 'Digit5', 'w-[5.4%]'],
+                            ['6', 'Digit6', 'w-[5.4%]'], ['7', 'Digit7', 'w-[5.4%]'], ['8', 'Digit8', 'w-[5.4%]'], ['9', 'Digit9', 'w-[5.4%]'], ['0', 'Digit0', 'w-[5.4%]'],
+                            ['- / _', 'Minus', 'w-[5.4%]'], ['= / +', 'Equal', 'w-[5.4%]'],
+                            ['Backspace', 'Backspace', 'w-[9.8%]'],
+                        ]) +
+                        // QWERTY Row
+                        rowHtml([
+                            ['Tab', 'Tab', 'w-[8%]'], ['Q', 'KeyQ', 'w-[5.4%]'], ['W', 'KeyW', 'w-[5.4%]'], ['E', 'KeyE', 'w-[5.4%]'], ['R', 'KeyR', 'w-[5.4%]'], ['T', 'KeyT', 'w-[5.4%]'],
+                            ['Y', 'KeyY', 'w-[5.4%]'], ['U', 'KeyU', 'w-[5.4%]'], ['I', 'KeyI', 'w-[5.4%]'], ['O', 'KeyO', 'w-[5.4%]'], ['P', 'KeyP', 'w-[5.4%]'],
+                            ['[ / {', 'BracketLeft', 'w-[5.4%]'], ['] / }', 'BracketRight', 'w-[5.4%]'], ['\\ / |', 'Backslash', 'w-[7.2%]'],
+                        ]) +
+                        // ASDF Row
+                        rowHtml([
+                            ['Caps Lock', 'CapsLock', 'w-[9.2%]'], ['A', 'KeyA', 'w-[5.4%]'], ['S', 'KeyS', 'w-[5.4%]'], ['D', 'KeyD', 'w-[5.4%]'], ['F', 'KeyF', 'w-[5.4%]'], ['G', 'KeyG', 'w-[5.4%]'],
+                            ['H', 'KeyH', 'w-[5.4%]'], ['J', 'KeyJ', 'w-[5.4%]'], ['K', 'KeyK', 'w-[5.4%]'], ['L', 'KeyL', 'w-[5.4%]'],
+                            ['; / :', 'Semicolon', 'w-[5.4%]'], ["' / \"", 'Quote', 'w-[5.4%]'],
+                            ['Enter', 'Enter', 'w-[10.2%]'],
+                        ]) +
+                        // ZXCV Row
+                        rowHtml([
+                            ['Shift', 'ShiftLeft', 'w-[12%]'], ['Z', 'KeyZ', 'w-[5.4%]'], ['X', 'KeyX', 'w-[5.4%]'], ['C', 'KeyC', 'w-[5.4%]'], ['V', 'KeyV', 'w-[5.4%]'], ['B', 'KeyB', 'w-[5.4%]'],
+                            ['N', 'KeyN', 'w-[5.4%]'], ['M', 'KeyM', 'w-[5.4%]'],
+                            [', / <', 'Comma', 'w-[5.4%]'], ['. / >', 'Period', 'w-[5.4%]'], ['/ / ?', 'Slash', 'w-[5.4%]'],
+                            ['Shift', 'ShiftRight', 'w-[13.6%]'],
+                        ]) +
+                        // Bottom Control Row
+                        rowHtml([
+                            ['Ctrl', 'ControlLeft', 'w-[6.4%]'], ['Fn', 'Fn', 'w-[5.4%] hidden sm:flex'], ['Win', 'MetaLeft', 'w-[5.4%]'], ['Alt', 'AltLeft', 'w-[5.4%]'],
+                            ['Spacebar', 'Space', 'flex-grow max-w-[45%] min-w-[150px]'],
+                            ['Alt', 'AltRight', 'w-[5.4%]'], ['Ctrl', 'ControlRight', 'w-[6.4%]'],
+                        ]) +
+                    `</div>` +
+                    // Vertical Nav/Arrow Cluster
+                    `<div id="nav-arrow-block-75" class="hidden sm:flex flex-col w-[20%] pt-2">
+                        ${rowHtml([['Home', 'Home', 'h-8'], ['PageUp', 'PageUp', 'h-8']])}
+                        ${rowHtml([['End', 'End', 'h-8'], ['PageDown', 'PageDown', 'h-8']])}
+                        <div class="mt-4 pt-1 flex flex-col space-y-1">
+                            ${rowHtml([['', '', 'w-1/3'], ['↑', 'ArrowUp', 'w-1/3'], ['', '', 'w-1/3']])}
+                            ${rowHtml([['←', 'ArrowLeft', 'w-1/3'], ['↓', 'ArrowDown', 'w-1/3'], ['→', 'ArrowRight', 'w-1/3']])}
+                        </div>
+                    </div>
+                </div>`
+            ],
+            wrapperClass: 'max-w-4xl' // 75% width
+        };
+
+        const layout65 = { // Minimal Style (No F-row, integrated Nav cluster)
+            title: 'Keyboard Layout (65% Minimal)',
+            grid: [
+                // Top Number Row (Esc key lives here)
+                rowHtml([
+                    ['Esc', 'Escape', 'w-[6%]'],
+                    ['1', 'Digit1', 'w-[6%]'], ['2', 'Digit2', 'w-[6%]'], ['3', 'Digit3', 'w-[6%]'], ['4', 'Digit4', 'w-[6%]'], ['5', 'Digit5', 'w-[6%]'],
+                    ['6', 'Digit6', 'w-[6%]'], ['7', 'Digit7', 'w-[6%]'], ['8', 'Digit8', 'w-[6%]'], ['9', 'Digit9', 'w-[6%]'], ['0', 'Digit0', 'w-[6%]'],
+                    ['- / _', 'Minus', 'w-[6%]'], ['= / +', 'Equal', 'w-[6%]'], ['Backspace', 'Backspace', 'w-[10%]'],
+                    // 65% Nav Cluster
+                    ['Del', 'Delete', 'w-[6%] ml-2 sm:ml-4'],
+                ]),
+
+                // QWERTY Row (Tightly packed with no gaps)
+                rowHtml([
+                    ['Tab', 'Tab', 'w-[8%]'],
+                    ['Q', 'KeyQ', 'w-[6%]'], ['W', 'KeyW', 'w-[6%]'], ['E', 'KeyE', 'w-[6%]'], ['R', 'KeyR', 'w-[6%]'], ['T', 'KeyT', 'w-[6%]'],
+                    ['Y', 'KeyY', 'w-[6%]'], ['U', 'KeyU', 'w-[6%]'], ['I', 'KeyI', 'w-[6%]'], ['O', 'KeyO', 'w-[6%]'], ['P', 'KeyP', 'w-[6%]'],
+                    ['[ / {', 'BracketLeft', 'w-[6%]'],
+                    ['] / }', 'BracketRight', 'w-[6%]'],
+                    ['\\ / |', 'Backslash', 'w-[8%]'],
+                    ['Home', 'Home', 'w-[6%] ml-2 sm:ml-4'],
+                ]),
+
+                // ASDF Row
+                rowHtml([
+                    ['Caps Lock', 'CapsLock', 'w-[10%]'],
+                    ['A', 'KeyA', 'w-[6%]'], ['S', 'KeyS', 'w-[6%]'], ['D', 'KeyD', 'w-[6%]'], ['F', 'KeyF', 'w-[6%]'], ['G', 'KeyG', 'w-[6%]'],
+                    ['H', 'KeyH', 'w-[6%]'], ['J', 'KeyJ', 'w-[6%]'], ['K', 'KeyK', 'w-[6%]'], ['L', 'KeyL', 'w-[6%]'],
+                    ['; / :', 'Semicolon', 'w-[6%]'],
+                    ["' / \"", 'Quote', 'w-[6%]'],
+                    ['Enter', 'Enter', 'w-[11%]'],
+                    ['PageUp', 'PageUp', 'w-[6%] ml-2 sm:ml-4'],
+                ]),
+
+                // ZXCV Row
+                rowHtml([
+                    ['Shift', 'ShiftLeft', 'w-[13.5%]'],
+                    ['Z', 'KeyZ', 'w-[6%]'], ['X', 'KeyX', 'w-[6%]'], ['C', 'KeyC', 'w-[6%]'], ['V', 'KeyV', 'w-[6%]'], ['B', 'KeyB', 'w-[6%]'],
+                    ['N', 'KeyN', 'w-[6%]'], ['M', 'KeyM', 'w-[6%]'],
+                    [', / <', 'Comma', 'w-[6%]'], ['. / >', 'Period', 'w-[6%]'], ['/ / ?', 'Slash', 'w-[6%]'],
+                    ['Shift', 'ShiftRight', 'w-[13.5%]'],
+                    ['PageDown', 'PageDown', 'w-[6%] ml-2 sm:ml-4'],
+                ]),
+
+                // Control/Space Row + Arrow Keys
+                rowHtml([
+                    ['Ctrl', 'ControlLeft', 'w-[6.5%]'], ['Win', 'MetaLeft', 'w-[6.5%]'], ['Alt', 'AltLeft', 'w-[6.5%]'], ['Fn', 'Fn', 'w-[6.5%]'],
+                    ['Spacebar', 'Space', 'flex-grow max-w-[30%] min-w-[150px]'],
+                    ['Alt', 'AltRight', 'w-[6.5%]'], ['Ctrl', 'ControlRight', 'w-[6.5%]'],
+                    ['←', 'ArrowLeft', 'w-[6%] ml-4 sm:ml-6'],
+                    ['↓', 'ArrowDown', 'w-[6%]'],
+                    ['→', 'ArrowRight', 'w-[6%]'],
+                ]),
+            ],
+            wrapperClass: 'max-w-3xl' // 65% width
+        };
+
+        const keyboardLayouts = {
+            '104': layout104, // New Full Size 100%
+            '87': layout87,   // Renamed TKL 87%
+            '75': layout75,
+            '65': layout65
+        };
+
+        // --- 1. Key Mapping and DOM Initialization ---
 
         // Cache DOM elements
         const displayCode = document.getElementById('display-code');
         const displayKey = document.getElementById('display-key');
+        const keyboardGrid = document.getElementById('keyboard-grid');
+        const layoutTitle = document.getElementById('layout-title');
+        const layoutWrapper = document.getElementById('keyboard-container-wrapper');
 
         // Mouse Button IDs map
         const mouseButtonIds = {
@@ -239,21 +458,50 @@
             2: 'mouse-right',   // Right click
         };
 
-        // --- 2. Keyboard Event Handlers ---
+        let currentLayout = '104'; // Default to 100% Full Size
 
         /**
-         * Converts event.code to the format used in our key IDs.
-         * @param {string} code - The raw key code from the event.
-         * @returns {string | null} The formatted ID, or null if key is unmapped.
+         * Renders the selected keyboard layout and updates the wrapper size.
+         * @param {string} layoutKey - '104', '87', '75', or '65'.
          */
+        function renderKeyboardLayout(layoutKey) {
+            const layout = keyboardLayouts[layoutKey];
+            if (!layout) return;
+
+            // Update global current layout state
+            currentLayout = layoutKey;
+
+            // 1. Update Layout Title and Grid
+            layoutTitle.textContent = layout.title;
+            keyboardGrid.innerHTML = layout.grid.join('');
+
+            // 2. Update Wrapper Max Width
+            layoutWrapper.className = 'rgb-border w-full shadow-2xl ' + layout.wrapperClass;
+
+            // 3. Update active button state
+            document.querySelectorAll('.layout-btn').forEach(btn => {
+                if (btn.dataset.layout === layoutKey) {
+                    btn.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
+                    btn.classList.remove('bg-gray-600', 'hover:bg-gray-600/80');
+                } else {
+                    btn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+                    btn.classList.add('bg-gray-600', 'hover:bg-gray-600/80');
+                }
+            });
+
+            // Re-attach visual click/touch listeners for new keys
+            attachVisualListeners();
+        }
+
+        // --- 2. Event Handlers ---
+
         function getTargetKeyId(code) {
-            // Fn key is not standard and is often uncatchable, we skip it for visual mapping
-            if (code === 'Fn') return null;
+            // Fn key is often a physical switch, not a testable input
+            if (code === 'Fn') return null; 
             return `key-${code}`;
         }
 
         const handleKeyDown = (event) => {
-            // Prevent default action (like scrolling or browser shortcuts)
             event.preventDefault();
 
             const targetKeyId = getTargetKeyId(event.code);
@@ -261,16 +509,12 @@
 
             const keyElement = document.getElementById(targetKeyId);
 
-            // Update info display
             displayCode.textContent = event.code;
-            // Handle special keys for cleaner display
             let keyText = event.key;
             if (event.key === ' ') keyText = '[Spacebar]';
             if (event.key === 'Meta') keyText = event.code.includes('Left') ? '[Win/Cmd Left]' : '[Win/Cmd Right]';
             displayKey.textContent = keyText;
 
-
-            // Apply active class if element exists and is not already active (to handle key repeat)
             if (keyElement && !keyElement.classList.contains('key-active')) {
                 keyElement.classList.add('key-active');
             }
@@ -282,26 +526,19 @@
 
             const keyElement = document.getElementById(targetKeyId);
 
-            // Remove active class
             if (keyElement) {
                 keyElement.classList.remove('key-active');
             }
         };
 
-        // --- 3. Mouse Event Handlers ---
-
         const handleMouseDown = (event) => {
-            // Prevent context menu on right click to register the event
-            if (event.button === 2) {
-                event.preventDefault();
-            }
+            if (event.button === 2) event.preventDefault(); // Prevent context menu for right click testing
 
             const mouseId = mouseButtonIds[event.button];
             if (mouseId) {
                 const mouseElement = document.getElementById(mouseId);
                 mouseElement.classList.add('key-active');
 
-                // Update info display
                 displayCode.textContent = `Mouse Button ${event.button}`;
                 displayKey.textContent = mouseElement.textContent.trim();
             }
@@ -315,39 +552,58 @@
             }
         };
 
-        // --- 4. Attach Listeners ---
+        // Function to attach listeners to newly rendered keys for touch/visual testing
+        function attachVisualListeners() {
+            document.querySelectorAll('.key-unit').forEach(key => {
+                if (key.id.startsWith('key-') || key.id.startsWith('mouse-')) {
+                    // Remove existing listeners to prevent duplicates
+                    key.removeEventListener('mousedown', handleVisualPress);
+                    key.removeEventListener('mouseup', handleVisualRelease);
+                    key.removeEventListener('touchstart', handleVisualPress);
+                    key.removeEventListener('touchend', handleVisualRelease);
 
-        // Keyboard listeners on the entire window
-        window.addEventListener('keydown', handleKeyDown);
-        window.addEventListener('keyup', handleKeyUp);
+                    // Add new listeners
+                    key.addEventListener('mousedown', handleVisualPress);
+                    key.addEventListener('mouseup', handleVisualRelease);
+                    key.addEventListener('touchstart', handleVisualPress);
+                    key.addEventListener('touchend', handleVisualRelease);
+                }
+            });
+        }
 
-        // Mouse listeners on the entire window (Capturing outside the preview is tricky in IFrames, but this is best practice)
-        window.addEventListener('mousedown', handleMouseDown);
-        window.addEventListener('mouseup', handleMouseUp);
+        const handleVisualPress = (e) => {
+            if (e.type.startsWith('touch')) e.preventDefault();
+            e.currentTarget.classList.add('key-active');
+        };
 
-        // Disable context menu specifically for the right click test
-        window.addEventListener('contextmenu', (e) => e.preventDefault());
+        const handleVisualRelease = (e) => {
+            if (e.type.startsWith('touch')) e.preventDefault();
+            e.currentTarget.classList.remove('key-active');
+        };
 
 
-        // Optional: Visual click feedback on the keyboard layout (for touch/manual clicking)
-        document.querySelectorAll('.key-unit').forEach(key => {
-            if (key.id.startsWith('key-')) {
-                key.addEventListener('mousedown', (e) => {
-                    e.currentTarget.classList.add('key-active');
+        // --- 3. Initial Setup and Listener Attachments ---
+
+        window.onload = () => {
+            // Initial render of the default layout (100% Full Size)
+            renderKeyboardLayout(currentLayout);
+
+            // Global Keyboard/Mouse Listeners
+            window.addEventListener('keydown', handleKeyDown);
+            window.addEventListener('keyup', handleKeyUp);
+            window.addEventListener('mousedown', handleMouseDown);
+            window.addEventListener('mouseup', handleMouseUp);
+            window.addEventListener('contextmenu', (e) => e.preventDefault()); // Prevent right-click context menu
+
+            // Layout Button Listeners
+            document.querySelectorAll('.layout-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const layout = e.currentTarget.dataset.layout;
+                    renderKeyboardLayout(layout);
                 });
-                key.addEventListener('mouseup', (e) => {
-                    e.currentTarget.classList.remove('key-active');
-                });
-                key.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    e.currentTarget.classList.add('key-active');
-                });
-                key.addEventListener('touchend', (e) => {
-                    e.preventDefault();
-                    e.currentTarget.classList.remove('key-active');
-                });
-            }
-        });
+            });
+        };
+
 
     </script>
 </body>
